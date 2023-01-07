@@ -43,3 +43,17 @@ func ReadFolder(folderPath string) ([]File, error) {
 
 	return files, err
 }
+
+// Rename file
+
+func RenameFile(oldPath string, newPath string) error {
+	err := os.Rename(oldPath, newPath)
+	return err
+}
+
+// Delete file
+
+func DeleteFile(path string) error {
+	err := os.Remove(path)
+	return err
+}
