@@ -6,12 +6,33 @@ import (
 
 // Create new folder, in given folder path
 
-func CreateFolder(folderPath string) string {
+func CreateFolder(folderPath string) error {
 	err := os.MkdirAll(folderPath, os.ModePerm)
+	return err
+}
 
-	if err != nil {
-		return err.Error()
+// Remove the folder in given path
+
+func RemoveFolder(folderPath string) error {
+	err := os.RemoveAll(folderPath)
+	return err
+}
+
+// Get all files from given directory
+
+type File struct {
+	name  string
+	isDir bool
+}
+
+func ReadFolder(folderPath string) ([]File, error) {
+	rawFiles, err := os.ReadDir(folderPath)
+
+	var files []File
+
+	for _, file := range rawFiles {
+		files = append(files, File{name: file.Name(), isDir: file.IsDir()})
 	}
 
-	return "Created folder successfully."
+	return files, err
 }
