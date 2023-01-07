@@ -18,6 +18,13 @@ func RemoveFolder(folderPath string) error {
 	return err
 }
 
+// Rename the folder in given path
+
+func RenameFolder(folderPath string, newPath string) error {
+	err := os.Rename(folderPath, newPath)
+	return err
+}
+
 // Get all files from given directory
 
 type File struct {
