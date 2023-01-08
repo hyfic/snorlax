@@ -24,6 +24,7 @@ func StartServer(port int32) {
 
 	fileApi.PUT("/rename-file", renameFileRoute)
 	fileApi.DELETE("/delete-file", deleteFileRoute)
+	fileApi.POST("/upload", fileUploadRoute)
 
 	fileApi.Use()
 
@@ -125,4 +126,27 @@ func deleteFileRoute(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, gin.H{"message": "deleted " + requestBody.Path + " successfully"})
+}
+
+func fileUploadRoute(context *gin.Context) {
+	var requestBody FileUploadRequestBody
+	if GetBodyFromRequest(context, &requestBody) != nil {
+		return
+	}
+
+	uploadedFile, err := context.FormFile("file")
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	err = context.SaveUploadedFile(uploadedFile, file.StorageFolder+requestBody.FilePath+requestBody.FileName)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"message": "uploaded file successfully"})
 }
