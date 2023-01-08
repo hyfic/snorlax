@@ -22,6 +22,9 @@ func StartServer(port int32) {
 	fileApi.DELETE("/delete-folder", deleteFolderRoute)
 	fileApi.GET("/view-folder", viewFolderRoute)
 
+	fileApi.PUT("/rename-file", renameFileRoute)
+	fileApi.DELETE("/delete-file", deleteFileRoute)
+
 	fileApi.Use()
 
 	// set storage as static folder
@@ -92,4 +95,34 @@ func viewFolderRoute(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, files)
+}
+
+func renameFileRoute(context *gin.Context) {
+	var requestBody PutRequestBody
+	if GetBodyFromRequest(context, &requestBody) != nil {
+		return
+	}
+
+	err := file.RenameFile(requestBody.OldPath, requestBody.NewPath)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"message": "Renamed " + requestBody.OldPath + " to " + requestBody.NewPath})
+}
+
+func deleteFileRoute(context *gin.Context) {
+	var requestBody RequestBody
+	if GetBodyFromRequest(context, &requestBody) != nil {
+		return
+	}
+
+	err := file.DeleteFile(requestBody.Path)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"message": "deleted " + requestBody.Path + " successfully"})
 }
