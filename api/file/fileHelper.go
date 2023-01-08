@@ -4,41 +4,43 @@ import (
 	"os"
 )
 
+const StorageFolder = "storage/"
+
 // Create new folder, in given folder path
 
 func CreateFolder(folderPath string) error {
-	err := os.MkdirAll(folderPath, os.ModePerm)
+	err := os.MkdirAll(StorageFolder+folderPath, os.ModePerm)
 	return err
 }
 
 // Remove the folder in given path
 
-func RemoveFolder(folderPath string) error {
-	err := os.RemoveAll(folderPath)
+func DeleteFolder(folderPath string) error {
+	err := os.RemoveAll(StorageFolder + folderPath)
 	return err
 }
 
 // Rename the folder in given path
 
 func RenameFolder(folderPath string, newPath string) error {
-	err := os.Rename(folderPath, newPath)
+	err := os.Rename(StorageFolder+folderPath, StorageFolder+newPath)
 	return err
 }
 
 // Get all files from given directory
 
 type File struct {
-	name  string
-	isDir bool
+	Name  string `json:"name" form:"name" binding:"required"`
+	IsDir bool   `json:"isDir" form:"name" binding:"required"`
 }
 
 func ReadFolder(folderPath string) ([]File, error) {
-	rawFiles, err := os.ReadDir(folderPath)
+	rawFiles, err := os.ReadDir(StorageFolder + folderPath)
 
 	var files []File
 
 	for _, file := range rawFiles {
-		files = append(files, File{name: file.Name(), isDir: file.IsDir()})
+		files = append(files, File{Name: file.Name(), IsDir: file.IsDir()})
 	}
 
 	return files, err
@@ -47,13 +49,13 @@ func ReadFolder(folderPath string) ([]File, error) {
 // Rename file
 
 func RenameFile(oldPath string, newPath string) error {
-	err := os.Rename(oldPath, newPath)
+	err := os.Rename(StorageFolder+oldPath, StorageFolder+newPath)
 	return err
 }
 
 // Delete file
 
 func DeleteFile(path string) error {
-	err := os.Remove(path)
+	err := os.Remove(StorageFolder + path)
 	return err
 }

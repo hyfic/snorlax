@@ -20,6 +20,15 @@
 # Go workspace file
 go.work
 
+# Go sum
+go.sum
+
+# Database file
+*.db
+
+# Static files
+/storage
+
 # Env variables
 .env
 .env.local

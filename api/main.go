@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import "github.com/hyfic/snorlax/api/router"
 
 func main() {
-  fmt.Println("hello world")
+	router.StartServer(8080)
 }
