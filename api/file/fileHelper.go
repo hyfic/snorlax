@@ -15,7 +15,7 @@ func CreateFolder(folderPath string) error {
 
 // Remove the folder in given path
 
-func RemoveFolder(folderPath string) error {
+func DeleteFolder(folderPath string) error {
 	err := os.RemoveAll(StorageFolder + folderPath)
 	return err
 }
@@ -30,8 +30,8 @@ func RenameFolder(folderPath string, newPath string) error {
 // Get all files from given directory
 
 type File struct {
-	name  string
-	isDir bool
+	Name  string `json:"name" form:"name" binding:"required"`
+	IsDir bool   `json:"isDir" form:"name" binding:"required"`
 }
 
 func ReadFolder(folderPath string) ([]File, error) {
@@ -40,7 +40,7 @@ func ReadFolder(folderPath string) ([]File, error) {
 	var files []File
 
 	for _, file := range rawFiles {
-		files = append(files, File{name: file.Name(), isDir: file.IsDir()})
+		files = append(files, File{Name: file.Name(), IsDir: file.IsDir()})
 	}
 
 	return files, err
