@@ -4,24 +4,26 @@ import (
 	"os"
 )
 
+const StorageFolder = "storage/"
+
 // Create new folder, in given folder path
 
 func CreateFolder(folderPath string) error {
-	err := os.MkdirAll(folderPath, os.ModePerm)
+	err := os.MkdirAll(StorageFolder+folderPath, os.ModePerm)
 	return err
 }
 
 // Remove the folder in given path
 
 func RemoveFolder(folderPath string) error {
-	err := os.RemoveAll(folderPath)
+	err := os.RemoveAll(StorageFolder + folderPath)
 	return err
 }
 
 // Rename the folder in given path
 
 func RenameFolder(folderPath string, newPath string) error {
-	err := os.Rename(folderPath, newPath)
+	err := os.Rename(StorageFolder+folderPath, StorageFolder+newPath)
 	return err
 }
 
@@ -33,7 +35,7 @@ type File struct {
 }
 
 func ReadFolder(folderPath string) ([]File, error) {
-	rawFiles, err := os.ReadDir(folderPath)
+	rawFiles, err := os.ReadDir(StorageFolder + folderPath)
 
 	var files []File
 
@@ -47,13 +49,13 @@ func ReadFolder(folderPath string) ([]File, error) {
 // Rename file
 
 func RenameFile(oldPath string, newPath string) error {
-	err := os.Rename(oldPath, newPath)
+	err := os.Rename(StorageFolder+oldPath, StorageFolder+newPath)
 	return err
 }
 
 // Delete file
 
 func DeleteFile(path string) error {
-	err := os.Remove(path)
+	err := os.Remove(StorageFolder + path)
 	return err
 }
