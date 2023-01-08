@@ -14,7 +14,12 @@ type PutRequestBody struct { // struct for request which provide both, oldPath &
 	NewPath string `json:"newPath" form:"newPath" binding:"required"`
 }
 
-func GetBodyFromRequest[T RequestBody | PutRequestBody](context *gin.Context, requestBody *T) error {
+type FileUploadRequestBody struct { // struct specifically for file upload
+	FileName string `json:"name" form:"name" binding:"required"`
+	FilePath string `json:"filePath" form:"filePath" binding:"required"`
+}
+
+func GetBodyFromRequest[T RequestBody | PutRequestBody | FileUploadRequestBody](context *gin.Context, requestBody *T) error {
 	err := context.BindJSON(&requestBody)
 
 	if err != nil {
