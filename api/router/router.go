@@ -14,8 +14,10 @@ func init() {
 func StartServer(port int32) {
 	// Routes
 
+	// set storage as static folder
+	router.Static("/storage", "./storage")
+
 	// listen server on port
 	addr := fmt.Sprintf(":%v", port)
 	router.Run(addr)
 }
-
