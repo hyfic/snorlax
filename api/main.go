@@ -1,7 +1,11 @@
 package main
 
-import "github.com/hyfic/snorlax/api/router"
+import (
+	"github.com/hyfic/snorlax/api/router"
+	"github.com/hyfic/snorlax/api/util"
+)
 
 func main() {
-	router.StartServer(8080)
+	port := util.GetPort()
+	router.StartServer(port)
 }
