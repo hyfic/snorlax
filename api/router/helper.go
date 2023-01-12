@@ -23,7 +23,7 @@ func GetBodyFromRequest[T RequestBody | PutRequestBody | FileUploadRequestBody](
 	err := context.BindJSON(&requestBody)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 	}
 
 	return err
