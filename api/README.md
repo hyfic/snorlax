@@ -65,11 +65,6 @@
   "newPath": "{new full file path}"
 }
 ```
-
-3. `GET` : `/file/view-file/{filepath}`
-
-   > Get direct file
-
 4. `DELETE` : `/file/delete-file`
 
 ```json
