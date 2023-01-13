@@ -14,6 +14,8 @@ func init() {
 }
 
 func StartServer(port int32) {
+	router.Use(authorizationMiddleware()) // use authorization middleware
+
 	// Routes
 	fileApi := router.Group("file")
 
@@ -34,6 +36,24 @@ func StartServer(port int32) {
 	// listen server on port
 	addr := fmt.Sprintf(":%v", port)
 	router.Run(addr)
+}
+
+// Authorization middleware checker
+// :- verify authorization token & proceed to route
+func authorizationMiddleware() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		//authorizationHeader := context.Request.Header.Get("authorization")
+		//
+		//if len(authorizationHeader) == 0 {
+		//	context.JSON(http.StatusUnauthorized, gin.H{"message": "authorization header is not provided."})
+		//	context.Abort()
+		//	return
+		//}
+
+		// TODO: check for authorization
+
+		context.Next()
+	}
 }
 
 // Routes handlers

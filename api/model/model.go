@@ -19,15 +19,6 @@ func initDatabase() (*sql.DB, error) {
 		log.Fatal("[-] Failed to create table Core")
 	}
 
-	// client_key: custom ID made with IP, userAgent etc in client
-	// hash: custom hash for client
-	statement, err = db.Prepare("CREATE TABLE IF NOT EXISTS Client (id INTEGER,client_key TEXT,data TEXT,hash TEXT)")
-	statement.Exec()
-
-	if err != nil {
-		log.Fatal("[-] Failed to create table Client")
-	}
-
 	return db, err
 }
 
