@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/hyfic/snorlax/api/router"
 	"github.com/hyfic/snorlax/api/util"
 )
 
