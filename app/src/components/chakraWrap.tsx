@@ -11,7 +11,7 @@ import {
 type ReactComponent<Props = {}> = React.FC<PropsWithChildren<Props>>;
 
 const config: ThemeConfig = {
-  initialColorMode: 'system',
+  initialColorMode: 'dark',
 };
 
 const theme = extendTheme({ config });
