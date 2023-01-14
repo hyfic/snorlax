@@ -8,7 +8,7 @@ export const Navbar: React.FC = () => {
       <Flex direction='column'>
         <ServerOptions />
       </Flex>
-      <div></div>
+      <p className='text-sm text-app-text2 opacity-50'>Snorlax v1.0.0</p>
     </Flex>
   );
 };
