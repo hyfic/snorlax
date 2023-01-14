@@ -14,6 +14,7 @@ func init() {
 }
 
 func StartServer(port int32) {
+	router.Use(CORSMiddleware())
 	router.Use(authorizationMiddleware()) // use authorization middleware
 
 	router.GET("/ping", pingRoute) // route to check if server is up
@@ -38,6 +39,18 @@ func StartServer(port int32) {
 	// listen server on port
 	addr := fmt.Sprintf(":%v", port)
 	router.Run(addr)
+}
+
+// Cors middleware
+func CORSMiddleware() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		context.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		context.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		context.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		context.Writer.Header().Set("Access-Control-Allow-Methods", "POST, DELETE, GET, PUT")
+
+		context.Next()
+	}
 }
 
 // Authorization middleware checker
