@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BiChevronDown } from 'react-icons/bi';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { RiAddCircleLine } from 'react-icons/ri';
 import { Paths } from '@/utils/paths';
+import { AddServerWrapper } from '../serverOptions/addServerWrapper';
+import { useServerStore } from '@/store/server.store';
 import {
   Button,
   Menu,
@@ -15,6 +17,34 @@ import {
 } from '@chakra-ui/react';
 
 export const ServerOptions: React.FC = () => {
+  const { selectedServer, servers, loadServers, setSelectedServer } =
+    useServerStore();
+
+  const [menuPlaceholder, setMenuPlaceholder] = useState('No server selected');
+
+  useEffect(loadServers, []);
+
+  useEffect(() => {
+    if (!selectedServer) {
+      // select first element of databases if there is no selected database
+      if (servers.length === 0) {
+        setMenuPlaceholder('No server selected');
+        return;
+      }
+
+      setSelectedServer(servers[0]);
+      return;
+    }
+
+    setMenuPlaceholder(selectedServer.name);
+  }, [selectedServer, servers]);
+
+  useEffect(() => {
+    // set selected database id to localstorage
+    if (!selectedServer) return;
+    localStorage.setItem('selectedServerId', JSON.stringify(selectedServer.id));
+  }, [selectedServer]);
+
   return (
     <div>
       <Menu>
@@ -22,27 +52,41 @@ export const ServerOptions: React.FC = () => {
           w='full'
           textAlign='left'
           as={Button}
-          rightIcon={<BiChevronDown />}
+          rightIcon={<BiChevronDown className='text-2xl' />}
           className='bg-app-dark3 border-2 border-app-dark4'
         >
-          Fadhil's server
+          {menuPlaceholder}
         </MenuButton>
         <MenuList className='bg-app-dark3'>
-          <MenuGroup title='Servers'>
-            <Link to={Paths.fileList}>
-              <MenuItem className='bg-app-dark3 hover:bg-app-dark4'>
-                My server
-              </MenuItem>
-            </Link>
-          </MenuGroup>
-          <MenuDivider />
+          {servers.length !== 0 && (
+            <MenuGroup title=''>
+              <div
+                className={servers.length > 5 ? 'h-52 overflow-y-scroll' : ''}
+              >
+                {servers.map((server) => (
+                  <MenuItem
+                    key={server.id}
+                    onClick={() => {
+                      setSelectedServer(server);
+                      setMenuPlaceholder(server.name);
+                    }}
+                  >
+                    {server.name}
+                  </MenuItem>
+                ))}
+              </div>
+            </MenuGroup>
+          )}
+          {servers.length !== 0 && <MenuDivider />}
           <MenuGroup title='Options'>
-            <MenuItem
-              className='bg-app-dark3 hover:bg-app-dark4'
-              icon={<RiAddCircleLine className='text-lg' />}
-            >
-              Add server
-            </MenuItem>
+            <AddServerWrapper>
+              <MenuItem
+                className='bg-app-dark3 hover:bg-app-dark4'
+                icon={<RiAddCircleLine className='text-lg' />}
+              >
+                Add server
+              </MenuItem>
+            </AddServerWrapper>
             <Link to={Paths.settings} replace>
               <MenuItem
                 className='bg-app-dark3 hover:bg-app-dark4'
