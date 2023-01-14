@@ -10,9 +10,9 @@ pub fn read_servers() -> Result<Vec<server_model::ServerType>, String> {
 }
 
 #[tauri::command]
-pub fn add_server(path: String, name: String) -> Result<i64, String> {
+pub fn add_server(connection: String, name: String) -> Result<i64, String> {
     let db = init_database()?;
-    server_model::create(&db, path, name)
+    server_model::create(&db, connection, name)
 }
 
 #[tauri::command]
