@@ -16,6 +16,8 @@ func init() {
 func StartServer(port int32) {
 	router.Use(authorizationMiddleware()) // use authorization middleware
 
+	router.GET("/ping", pingRoute) // route to check if server is up
+
 	// Routes
 	fileApi := router.Group("file")
 
@@ -57,6 +59,10 @@ func authorizationMiddleware() gin.HandlerFunc {
 }
 
 // Routes handlers
+
+func pingRoute(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{"message": "ok"})
+}
 
 func createFolderRoute(context *gin.Context) {
 	var requestBody RequestBody
