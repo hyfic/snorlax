@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { IoMdRefresh } from 'react-icons/io';
-import { Button, Flex, IconButton, Input, Tooltip } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Tooltip,
+} from '@chakra-ui/react';
 import { ServerForm } from '@/components/serverOptions/serverFormWrapper';
 import { useServerStore } from '@/store/server.store';
 import { ServerDisplay } from '@/components/serverOptions/serverDisplay';
@@ -21,16 +29,22 @@ export const SettingsPage: React.FC = () => {
           </p>
         </div>
         <Flex alignItems='center'>
-          <div className='bg-app-dark3 px-4 rounded-lg flex items-center border border-app-dark4'>
-            <FiSearch className='text-app-text opacity-60 text-xl font-medium' />
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents='none'
+              children={
+                <FiSearch className='text-app-text opacity-60 text-lg font-medium' />
+              }
+            />
             <Input
               placeholder='Search'
-              className='border border-app-dark3 bg-app-dark3'
+              className='bg-app-dark3'
+              focusBorderColor='#5993E2'
               variant='filled'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
+          </InputGroup>
           <ServerForm>
             <Button
               ml={1}
