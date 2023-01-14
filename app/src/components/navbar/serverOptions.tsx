@@ -4,7 +4,7 @@ import { BiChevronDown } from 'react-icons/bi';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { RiAddCircleLine } from 'react-icons/ri';
 import { Paths } from '@/utils/paths';
-import { AddServerWrapper } from '../serverOptions/addServerWrapper';
+import { ServerForm } from '../serverOptions/serverFormWrapper';
 import { useServerStore } from '@/store/server.store';
 import {
   Button,
@@ -66,6 +66,7 @@ export const ServerOptions: React.FC = () => {
                 {servers.map((server) => (
                   <MenuItem
                     key={server.id}
+                    className='bg-app-dark3 hover:bg-app-dark4'
                     onClick={() => {
                       setSelectedServer(server);
                       setMenuPlaceholder(server.name);
@@ -79,14 +80,14 @@ export const ServerOptions: React.FC = () => {
           )}
           {servers.length !== 0 && <MenuDivider />}
           <MenuGroup title='Options'>
-            <AddServerWrapper>
+            <ServerForm>
               <MenuItem
                 className='bg-app-dark3 hover:bg-app-dark4'
                 icon={<RiAddCircleLine className='text-lg' />}
               >
                 Add server
               </MenuItem>
-            </AddServerWrapper>
+            </ServerForm>
             <Link to={Paths.settings} replace>
               <MenuItem
                 className='bg-app-dark3 hover:bg-app-dark4'

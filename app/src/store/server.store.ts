@@ -49,6 +49,12 @@ export const useServerStore = create<ServerStore>((set) => ({
   deleteServer(serverId) {
     set((state) => ({
       servers: state.servers.filter((server) => server.id !== serverId),
+      selectedServer:
+        state.selectedServer?.id == serverId
+          ? state.servers.length > 1
+            ? state.servers[0]
+            : null
+          : state.selectedServer,
     }));
   },
 }));
