@@ -54,7 +54,7 @@ pub fn update(db: &Connection, id: i32, connection: String, name: String) -> Res
     let id = format!("{}", id);
 
     match db.execute(
-        "UPDATE Server SET connection=(?1) name=(?2) WHERE id=(?3)",
+        "UPDATE Server SET connection=(?1), name=(?2) WHERE id=(?3)",
         &[&connection, &name, &id],
     ) {
         Ok(_) => return Ok(()),
