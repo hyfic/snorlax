@@ -5,3 +5,5 @@
 
 # cargo lock
 Cargo.lock
+
+*.db
