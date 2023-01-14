@@ -1,11 +1,18 @@
 import React from 'react';
+import { AppLayout } from './components/appLayout';
+import { Paths } from './utils/paths';
+import { FileListPage } from './pages/fileListPage';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 export const App: React.FC = () => {
   return (
-    <div>
-      <h1 className='text-xl'>Hello world</h1>
-      <p>sample</p>
-    </div>
+    <BrowserRouter>
+      <AppLayout>
+        <Routes>
+          <Route path={Paths.fileList} element={<FileListPage />} />
+        </Routes>
+      </AppLayout>
+    </BrowserRouter>
   );
 };
 

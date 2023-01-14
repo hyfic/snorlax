@@ -1,10 +1,14 @@
-i# SNORLAX API
+# 📁 SNORLAX API
 
 > File server for snorlax written in golang.
 
 ## DOCUMENTATION
 
-1. `POST` : `/file/create-folder`
+1. `GET` : `/ping`
+
+   > To make sure server is up
+
+2. `POST` : `/file/create-folder`
 
 ```json
 {
@@ -65,6 +69,7 @@
   "newPath": "{new full file path}"
 }
 ```
+
 4. `DELETE` : `/file/delete-file`
 
 ```json
