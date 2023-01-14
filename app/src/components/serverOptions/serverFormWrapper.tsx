@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ReactComponent } from '@/types/react.type';
+import { ServerType } from '@/types/server.type';
 import { invoke } from '@tauri-apps/api';
 import { showToast } from '@/utils/showToast';
 import { useServerStore } from '@/store/server.store';
@@ -23,7 +24,11 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-export const AddServerWrapper: ReactComponent = ({ children }) => {
+interface Props {
+  server?: ServerType;
+}
+
+export const ServerForm: ReactComponent<Props> = ({ server, children }) => {
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 
   const { loadServers } = useServerStore();
@@ -52,25 +57,65 @@ export const AddServerWrapper: ReactComponent = ({ children }) => {
     }
   }, [idx, serverURL, serverIP, serverPort, serverProtocol]);
 
+  const setServerData = () => {
+    if (!server) return;
+    setServerName(server.name);
+    let connectionSplit = server.connection.split(':');
+    if (connectionSplit.length === 2) {
+      setIdx(0);
+      setServerURL(server.connection);
+    }
+
+    if (connectionSplit.length > 2) {
+      setIdx(1);
+      setServerProtocol(connectionSplit[0] as any);
+      setServerIP(
+        connectionSplit[1].split('/').filter((x) => x.trim().length !== 0)[0]
+      );
+      setServerPort(
+        connectionSplit[2].split('/').filter((x) => x.trim().length !== 0)[0]
+      );
+    }
+  };
+
+  useEffect(setServerData, [server]);
+
   const onClose = () => {
     setLoading(false);
-    setConnection('');
-    setServerName('');
-    setIdx(0);
-    setServerURL('');
-    setServerIP('');
-    setServerPort('');
-    setServerProtocol('http');
+    if (!server) {
+      setConnection('');
+      setServerName('');
+      setIdx(0);
+      setServerURL('');
+      setServerIP('');
+      setServerPort('');
+      setServerProtocol('http');
+    } else {
+      setServerData();
+    }
     closeModal();
   };
 
   const addServerHandler = () => {
     setLoading(true);
 
-    invoke('add_server', { connection, name: serverName })
+    let data = server
+      ? {
+          id: server.id,
+          connection,
+          name: serverName,
+        }
+      : {
+          connection,
+          name: serverName,
+        };
+
+    invoke(server ? 'update_server' : 'add_server', data)
       .then((id: any) => {
         showToast({
-          title: 'Added server successfully',
+          title: server
+            ? 'Edited server details successfully'
+            : 'Added server successfully',
           status: 'info',
         });
         onClose();
@@ -78,7 +123,9 @@ export const AddServerWrapper: ReactComponent = ({ children }) => {
       })
       .catch((err) => {
         showToast({
-          title: 'Failed to add server',
+          title: server
+            ? 'Failed to edit server details'
+            : 'Failed to add server',
           description: err,
           status: 'error',
         });
@@ -99,7 +146,7 @@ export const AddServerWrapper: ReactComponent = ({ children }) => {
       >
         <ModalOverlay />
         <ModalContent className='bg-app-dark3'>
-          <ModalHeader>Add server</ModalHeader>
+          <ModalHeader>{server ? 'Edit server' : 'Add server'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input
@@ -113,6 +160,7 @@ export const AddServerWrapper: ReactComponent = ({ children }) => {
               variant='soft-rounded'
               colorScheme='blue'
               onChange={setIdx}
+              index={idx}
             >
               <TabList>
                 <Tab>URL</Tab>
@@ -174,7 +222,7 @@ export const AddServerWrapper: ReactComponent = ({ children }) => {
               onClick={addServerHandler}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
             >
-              Add server
+              {server ? 'Edit server' : 'Add server'}
             </Button>
           </ModalFooter>
         </ModalContent>

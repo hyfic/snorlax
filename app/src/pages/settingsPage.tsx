@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { IoMdRefresh } from 'react-icons/io';
 import { Button, Flex, IconButton, Input, Tooltip } from '@chakra-ui/react';
-import { AddServerWrapper } from '@/components/serverOptions/addServerWrapper';
+import { ServerForm } from '@/components/serverOptions/serverFormWrapper';
 import { useServerStore } from '@/store/server.store';
 import { ServerDisplay } from '@/components/serverOptions/serverDisplay';
 
@@ -31,14 +31,14 @@ export const SettingsPage: React.FC = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <AddServerWrapper>
+          <ServerForm>
             <Button
               ml={1}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
             >
               Add server
             </Button>
-          </AddServerWrapper>
+          </ServerForm>
           <Tooltip
             label='Refetch servers'
             className='bg-app-dark3 text-app-text border border-app-dark4'
