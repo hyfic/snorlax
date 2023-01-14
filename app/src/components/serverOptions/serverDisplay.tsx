@@ -8,6 +8,7 @@ import { PermissionWrapper } from '../permissionWrapper';
 import { invoke } from '@tauri-apps/api';
 import { useServerStore } from '@/store/server.store';
 import { showToast } from '@/utils/showToast';
+import { ServerForm } from './serverFormWrapper';
 
 interface Props {
   server: ServerType;
@@ -92,16 +93,18 @@ export const ServerDisplay: React.FC<Props> = ({ server }) => {
             />
           </Tooltip>
         </PermissionWrapper>
-        <Tooltip
-          label='Edit server details'
-          className='bg-app-dark3 border border-app-dark4 text-app-text'
-        >
-          <IconButton
-            aria-label='Edit server'
-            className='bg-app-dark4 text-app-text hover:opacity-60'
-            icon={<FiEdit className='text-lg' />}
-          />
-        </Tooltip>
+        <ServerForm server={server}>
+          <Tooltip
+            label='Edit server details'
+            className='bg-app-dark3 border border-app-dark4 text-app-text'
+          >
+            <IconButton
+              aria-label='Edit server'
+              className='bg-app-dark4 text-app-text hover:opacity-60'
+              icon={<FiEdit className='text-lg' />}
+            />
+          </Tooltip>
+        </ServerForm>
       </Flex>
     </Flex>
   );
