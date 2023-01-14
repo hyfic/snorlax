@@ -1,5 +1,11 @@
 import React from 'react';
+import { Header } from '@/components/fileList/header';
+import { ServerCheckerWrapper } from '@/components/serverCheckerWrapper';
 
 export const FileListPage: React.FC = () => {
-  return <div>fileListPage</div>;
+  return (
+    <ServerCheckerWrapper>
+      <Header />
+    </ServerCheckerWrapper>
+  );
 };
