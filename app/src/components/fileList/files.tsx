@@ -7,7 +7,7 @@ import { File } from './file';
 import { showToast } from '@/utils/showToast';
 
 export const Files: React.FC = () => {
-  const { path, setPath } = useFileListStore();
+  const { path, searchQuery } = useFileListStore();
   const { selectedServer } = useServerStore();
 
   const [files, setFiles] = useState<FileType[]>([]);
@@ -19,8 +19,9 @@ export const Files: React.FC = () => {
     setLoading(true);
 
     getDirectory(selectedServer?.connection, path)
-      .then(({ data }) => setFiles(data))
+      .then(({ data }) => setFiles(data || []))
       .catch((err) => {
+        setFiles([]);
         showToast({
           title: 'Failed to load files',
           description: err?.message,
@@ -34,6 +35,27 @@ export const Files: React.FC = () => {
   return (
     <div className='mt-5 w-full'>
       {loading && <p className='text-app-text2 font-medium'>Loading ...</p>}
+      <FileList
+        files={files.filter((file) =>
+          file.name
+            .toLowerCase()
+            .trim()
+            .includes(searchQuery.toLowerCase().trim())
+        )}
+        loading={loading}
+      />
+    </div>
+  );
+};
+
+interface FileListProps {
+  loading: boolean;
+  files: FileType[];
+}
+
+export const FileList: React.FC<FileListProps> = ({ loading, files }) => {
+  return (
+    <>
       {!loading && files.length == 0 && (
         <p className='text-app-text2 font-medium'>No files</p>
       )}
@@ -42,6 +64,6 @@ export const Files: React.FC = () => {
           <File key={idx} file={file} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
