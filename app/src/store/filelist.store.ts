@@ -4,14 +4,17 @@ interface FileListStore {
   pathName: string;
   path: string;
   view: 'grid' | 'view';
+  searchQuery: string;
   setPath: (path: string) => void;
   setView: (view: 'grid' | 'view') => void;
+  setSearchQuery: (searchQuery: string) => void;
 }
 
 export const useFileListStore = create<FileListStore>((set) => ({
   pathName: 'home',
   path: '/',
   view: 'grid',
+  searchQuery: '',
   setPath: (path) => {
     let paths = path.split('/');
     set({
@@ -20,4 +23,5 @@ export const useFileListStore = create<FileListStore>((set) => ({
     });
   },
   setView: (view) => set({ view }),
+  setSearchQuery: (searchQuery) => set({ searchQuery }),
 }));
