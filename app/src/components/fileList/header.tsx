@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-import { useFileListStore } from '@/store/filelist.store';
+import { usePathStore } from '@/store/path.store';
 import { FiFolderPlus, FiUpload } from 'react-icons/fi';
 import { useServerStore } from '@/store/server.store';
 import { pingServer } from '@/api/ping';
@@ -18,7 +18,7 @@ import {
 
 export const Header: React.FC = () => {
   const { selectedServer } = useServerStore();
-  const { path } = useFileListStore();
+  const { pathName } = usePathStore();
 
   const [isServerOnline, setIsServerOnline] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,11 +46,11 @@ export const Header: React.FC = () => {
               className='hover:bg-app-dark4 text-app-text'
               variant='ghost'
               icon={<MdKeyboardArrowLeft className='text-3xl text-app-text2' />}
-              disabled={path == '/'}
+              disabled={pathName == '/'}
             />
           </Tooltip>
           <div className='mx-1 bg-app-dark3 px-3 py-2 rounded-md border border-app-dark4'>
-            <p className='text-app-text font-medium'>{path}</p>
+            <p className='text-app-text font-medium'>{pathName}</p>
           </div>
           <Tooltip
             label='Go forward'
@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
               icon={
                 <MdKeyboardArrowRight className='text-3xl text-app-text2' />
               }
-              disabled={path == '/'}
+              disabled={pathName == '/'}
             />
           </Tooltip>
         </Flex>
