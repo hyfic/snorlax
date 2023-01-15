@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-import { usePathStore } from '@/store/path.store';
-import { FiFolderPlus, FiUpload } from 'react-icons/fi';
+import { useFileListStore } from '@/store/filelist.store';
+import { FiFolderPlus, FiSearch, FiUpload } from 'react-icons/fi';
 import { useServerStore } from '@/store/server.store';
-import { pingServer } from '@/api/ping';
 import { BiChevronDown } from 'react-icons/bi';
+import { ServerStatus } from '../serverOptions/serverStatus';
 import {
   Button,
   Flex,
   IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Menu,
   MenuButton,
   MenuItem,
@@ -18,20 +21,7 @@ import {
 
 export const Header: React.FC = () => {
   const { selectedServer } = useServerStore();
-  const { pathName } = usePathStore();
-
-  const [isServerOnline, setIsServerOnline] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!selectedServer) return;
-
-    setLoading(true);
-    pingServer(selectedServer.connection)
-      .then(() => setIsServerOnline(true))
-      .catch(() => setIsServerOnline(false))
-      .finally(() => setLoading(false));
-  }, [selectedServer]);
+  const { pathName, searchQuery, setSearchQuery } = useFileListStore();
 
   return (
     <div>
@@ -67,29 +57,37 @@ export const Header: React.FC = () => {
             />
           </Tooltip>
         </Flex>
-
+        <InputGroup w='fit-content'>
+          <InputLeftElement
+            pointerEvents='none'
+            children={
+              <FiSearch className='text-app-text opacity-60 text-lg font-medium' />
+            }
+          />
+          <Input
+            placeholder='Search'
+            className='bg-app-dark3'
+            focusBorderColor='#5993E2'
+            variant='filled'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </InputGroup>
         <Flex alignItems='center'>
-          <div className='bg-app-dark3 border border-app-dark4 py-2 px-3 rounded-md flex items-center'>
-            <div
-              className={`p-1 border-2 rounded-full mr-1.5 ${
-                loading
-                  ? 'border-app-text2 bg-app-text2'
-                  : isServerOnline
-                  ? 'border-teal-300 bg-teal-300'
-                  : 'border-rose-400 bg-rose-400'
-              }`}
-            />
-            <p className='text-app-text2'>
-              {loading ? 'Loading' : isServerOnline ? 'Online' : 'Offline'}
-            </p>
+          <ServerStatus
+            connection={selectedServer?.connection || null}
+            refetchBtnToolTip='Refetch files'
+            onRefetchBtnClick={() => {}}
+          />
+          <div>
+            <Button
+              mx={1}
+              leftIcon={<FiUpload />}
+              className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
+            >
+              Upload file
+            </Button>
           </div>
-          <Button
-            mx={1}
-            leftIcon={<FiUpload />}
-            className='bg-app-accent border border-app-accent transition-all duration-200 hover:bg-app-accent/80 hover:border-app-accent/80'
-          >
-            Upload file
-          </Button>
           <Menu>
             <MenuButton>
               <IconButton
