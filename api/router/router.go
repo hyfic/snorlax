@@ -47,7 +47,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		context.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		context.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		context.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		context.Writer.Header().Set("Access-Control-Allow-Methods", "POST, DELETE, GET, PUT")
+		context.Writer.Header().Set("Access-Control-Allow-Methods", "*")
 
 		context.Next()
 	}
@@ -123,12 +123,15 @@ func deleteFolderRoute(context *gin.Context) {
 }
 
 func viewFolderRoute(context *gin.Context) {
-	var requestBody RequestBody
-	if GetBodyFromRequest(context, &requestBody) != nil {
+	path := context.Query("path")
+
+	if len(path) == 0 {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "path is not given."})
+		context.Abort()
 		return
 	}
 
-	files, err := file.ReadFolder(requestBody.Path)
+	files, err := file.ReadFolder(path)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
