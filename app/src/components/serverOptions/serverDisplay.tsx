@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import SnorlaxLogo from '@/assets/logo.svg';
 import { ServerType } from '@/types/server.type';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { Flex, IconButton, Tooltip } from '@chakra-ui/react';
-import { pingServer } from '@/api/ping';
 import { PermissionWrapper } from '../permissionWrapper';
 import { invoke } from '@tauri-apps/api';
 import { useServerStore } from '@/store/server.store';
 import { showToast } from '@/utils/showToast';
 import { ServerForm } from './serverFormWrapper';
+import { ServerStatus } from './serverStatus';
 
 interface Props {
   server: ServerType;
@@ -17,20 +17,7 @@ interface Props {
 export const ServerDisplay: React.FC<Props> = ({ server }) => {
   const { deleteServer } = useServerStore();
 
-  const [isServerOnline, setIsServerOnline] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    pingServer(server.connection)
-      .then(() => setIsServerOnline(true))
-      .catch(() => setIsServerOnline(false))
-      .finally(() => setLoading(false));
-  }, [server]);
-
   const serverRemoveHandler = () => {
-    setLoading(true);
-
     invoke('delete_server', { id: server.id })
       .then(() => {
         showToast({ title: 'Removed server successfully', status: 'info' });
@@ -43,8 +30,7 @@ export const ServerDisplay: React.FC<Props> = ({ server }) => {
           status: 'error',
           duration: 5000,
         });
-      })
-      .finally(() => setLoading(false));
+      });
   };
 
   return (
@@ -62,20 +48,7 @@ export const ServerDisplay: React.FC<Props> = ({ server }) => {
         </div>
       </Flex>
       <Flex alignItems='center'>
-        <div className='bg-app-dark4 py-2 px-3 rounded-md flex items-center'>
-          <div
-            className={`p-1 border-2 rounded-full mr-1.5 ${
-              loading
-                ? 'border-app-text2 bg-app-text2'
-                : isServerOnline
-                ? 'border-teal-300 bg-teal-300'
-                : 'border-rose-400 bg-rose-400'
-            }`}
-          />
-          <p className='text-app-text2'>
-            {loading ? 'Loading' : isServerOnline ? 'Online' : 'Offline'}
-          </p>
-        </div>
+        <ServerStatus className='bg-app-dark4' connection={server.connection} />
         <PermissionWrapper
           description='Are you sure you want to remove this server from your list ? You can add server later.'
           placeholder='Remove server'
