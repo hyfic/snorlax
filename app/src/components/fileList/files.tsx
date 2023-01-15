@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { usePathStore } from '@/store/path.store';
+import { useFileListStore } from '@/store/filelist.store';
 import { useServerStore } from '@/store/server.store';
 import { FileType } from '@/types/file.type';
 import { getDirectory } from '@/api/file.api';
@@ -7,7 +7,7 @@ import { File } from './file';
 import { showToast } from '@/utils/showToast';
 
 export const Files: React.FC = () => {
-  const { path, setPath } = usePathStore();
+  const { path, setPath } = useFileListStore();
   const { selectedServer } = useServerStore();
 
   const [files, setFiles] = useState<FileType[]>([]);

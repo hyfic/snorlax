@@ -1,14 +1,17 @@
 import { create } from 'zustand';
 
-interface PathStore {
+interface FileListStore {
   pathName: string;
   path: string;
+  view: 'grid' | 'view';
   setPath: (path: string) => void;
+  setView: (view: 'grid' | 'view') => void;
 }
 
-export const usePathStore = create<PathStore>((set) => ({
+export const useFileListStore = create<FileListStore>((set) => ({
   pathName: 'home',
   path: '/',
+  view: 'grid',
   setPath: (path) => {
     let paths = path.split('/');
     set({
@@ -16,4 +19,5 @@ export const usePathStore = create<PathStore>((set) => ({
       pathName: paths[paths.length - 1] || 'home',
     });
   },
+  setView: (view) => set({ view }),
 }));
