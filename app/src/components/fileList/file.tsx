@@ -4,18 +4,32 @@ import FolderIcon from '@/assets/folder.svg';
 import { FileType } from '@/types/file.type';
 import { FileIcon } from 'react-file-icon';
 import { Tooltip } from '@chakra-ui/react';
+import { useFileListStore } from '@/store/filelist.store';
 
 interface Props {
   file: FileType;
 }
 
 export const File: React.FC<Props> = ({ file }) => {
+  const { path, setPath } = useFileListStore();
+
+  const handleFileClick = () => {
+    if (file.isDir) {
+      setPath(path + `${path === '/' ? '' : '/'}` + file.name);
+    } else {
+      // TODO: display file details in a drawer
+    }
+  };
+
   return (
     <Tooltip
       label={file.name}
       className='bg-app-dark3 border border-app-dark4 text-app-text'
     >
-      <div className='flex flex-col items-center cursor-pointer transition-all duration-200 hover:opacity-60 group'>
+      <div
+        onClick={handleFileClick}
+        className='flex flex-col items-center cursor-pointer transition-all duration-200 hover:opacity-60 group'
+      >
         <div className='h-fit w-16 relative'>
           <FileIcon
             foldColor={file.isDir ? '#1E2330' : '#343B50'}
