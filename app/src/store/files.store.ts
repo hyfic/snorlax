@@ -5,15 +5,19 @@ import { showToast } from '@/utils/showToast';
 
 interface FilesStore {
   files: FileType[];
+  selectedFile: FileType | null;
   loading: boolean;
+  setSelectedFile: (selectedFile: FileType | null) => void;
   loadFiles: (connection: string, path: string) => void;
 }
 
 export const useFilesStore = create<FilesStore>((set) => ({
   files: [],
+  selectedFile: null,
   loading: false,
+  setSelectedFile: (selectedFile) => set({ selectedFile }),
   loadFiles(connection, path) {
-    set({ loading: true });
+    set({ loading: true, files: [] });
     getDirectory(connection, path)
       .then(({ data }) => set({ files: data || [] }))
       .catch((err) => {
