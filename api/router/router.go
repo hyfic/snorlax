@@ -27,6 +27,7 @@ func StartServer(port int32) {
 	fileApi.DELETE("/delete-folder", deleteFolderRoute)
 	fileApi.GET("/view-folder", viewFolderRoute)
 	fileApi.GET("/get-file-info", getFileInfoRoute)
+	fileApi.GET("/download", downloadRoute)
 
 	fileApi.PUT("/rename-file", renameFileRoute)
 	fileApi.DELETE("/delete-file", deleteFileRoute)
@@ -158,6 +159,19 @@ func getFileInfoRoute(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, file)
+}
+
+func downloadRoute(context *gin.Context) {
+	path := context.Query("path")
+	fileName := context.Query("name")
+
+	if len(path) == 0 || len(fileName) == 0 {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "path/name is not given."})
+		context.Abort()
+		return
+	}
+
+	context.FileAttachment(file.StorageFolder+path, fileName)
 }
 
 func renameFileRoute(context *gin.Context) {
