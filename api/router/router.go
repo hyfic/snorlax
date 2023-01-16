@@ -26,6 +26,7 @@ func StartServer(port int32) {
 	fileApi.PUT("/rename-folder", renameFolderRoute)
 	fileApi.DELETE("/delete-folder", deleteFolderRoute)
 	fileApi.GET("/view-folder", viewFolderRoute)
+	fileApi.GET("/get-file-info", getFileInfoRoute)
 
 	fileApi.PUT("/rename-file", renameFileRoute)
 	fileApi.DELETE("/delete-file", deleteFileRoute)
@@ -42,6 +43,7 @@ func StartServer(port int32) {
 }
 
 // Cors middleware
+
 func CORSMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		context.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -138,6 +140,24 @@ func viewFolderRoute(context *gin.Context) {
 	}
 
 	context.JSON(http.StatusOK, files)
+}
+
+func getFileInfoRoute(context *gin.Context) {
+	path := context.Query("path")
+
+	if len(path) == 0 {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "path is not given."})
+		context.Abort()
+		return
+	}
+
+	file, err := file.GetFileInfo(path)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, file)
 }
 
 func renameFileRoute(context *gin.Context) {
