@@ -20,6 +20,7 @@ export const useFileListStore = create<FileListStore>((set) => ({
     set({
       path,
       pathName: paths[paths.length - 1] || 'home',
+      searchQuery: '', // clearing search field
     });
   },
   setView: (view) => set({ view }),

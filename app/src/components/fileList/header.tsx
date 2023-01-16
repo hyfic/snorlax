@@ -5,6 +5,7 @@ import { FiFolderPlus, FiSearch, FiUpload } from 'react-icons/fi';
 import { useServerStore } from '@/store/server.store';
 import { BiChevronDown } from 'react-icons/bi';
 import { ServerStatus } from '../serverOptions/serverStatus';
+import { useFilesStore } from '@/store/files.store';
 import {
   Button,
   Flex,
@@ -21,7 +22,9 @@ import {
 
 export const Header: React.FC = () => {
   const { selectedServer } = useServerStore();
-  const { pathName, searchQuery, setSearchQuery } = useFileListStore();
+  const { loadFiles, setSelectedFile } = useFilesStore();
+  const { path, setPath, pathName, searchQuery, setSearchQuery } =
+    useFileListStore();
 
   return (
     <div>
@@ -36,12 +39,23 @@ export const Header: React.FC = () => {
               className='hover:bg-app-dark4 text-app-text'
               variant='ghost'
               icon={<MdKeyboardArrowLeft className='text-3xl text-app-text2' />}
-              disabled={pathName == '/'}
+              onClick={() => {
+                let split = path.split('/');
+                split.pop();
+                setPath(split.length == 1 ? '/' : split.join('/'));
+                setSelectedFile(null);
+              }}
+              disabled={path == '/'}
             />
           </Tooltip>
-          <div className='mx-1 bg-app-dark3 px-3 py-2 rounded-md border border-app-dark4'>
-            <p className='text-app-text font-medium'>{pathName}</p>
-          </div>
+          <Tooltip
+            label={path}
+            className='bg-app-dark3 border border-app-dark4 text-app-text'
+          >
+            <div className='cursor-pointer mx-1 bg-app-dark3 px-3 py-2 rounded-md border border-app-dark4'>
+              <p className='text-app-text font-medium'>{pathName}</p>
+            </div>
+          </Tooltip>
           <Tooltip
             label='Go forward'
             className='bg-app-dark3 border border-app-dark4 text-app-text'
@@ -77,7 +91,10 @@ export const Header: React.FC = () => {
           <ServerStatus
             connection={selectedServer?.connection || null}
             refetchBtnToolTip='Refetch files'
-            onRefetchBtnClick={() => {}}
+            onRefetchBtnClick={() => {
+              loadFiles(selectedServer?.connection || '', path);
+              setSelectedFile(null);
+            }}
           />
           <div>
             <Button
