@@ -1,35 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useFileListStore } from '@/store/filelist.store';
 import { useServerStore } from '@/store/server.store';
+import { useFilesStore } from '@/store/files.store';
 import { FileType } from '@/types/file.type';
-import { getDirectory } from '@/api/file.api';
 import { File } from './file';
-import { showToast } from '@/utils/showToast';
 
 export const Files: React.FC = () => {
   const { path, searchQuery } = useFileListStore();
+  const { files, loadFiles, loading } = useFilesStore();
   const { selectedServer } = useServerStore();
-
-  const [files, setFiles] = useState<FileType[]>([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!selectedServer) return;
-
-    setLoading(true);
-
-    getDirectory(selectedServer?.connection, path)
-      .then(({ data }) => setFiles(data || []))
-      .catch((err) => {
-        setFiles([]);
-        showToast({
-          title: 'Failed to load files',
-          description: err?.message,
-          status: 'error',
-          duration: 5000,
-        });
-      })
-      .finally(() => setLoading(false));
+    loadFiles(selectedServer.connection, path);
   }, [path, selectedServer]);
 
   return (
