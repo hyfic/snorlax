@@ -22,7 +22,7 @@ import {
 
 export const Header: React.FC = () => {
   const { selectedServer } = useServerStore();
-  const { loadFiles } = useFilesStore();
+  const { loadFiles, setSelectedFile } = useFilesStore();
   const { path, setPath, pathName, searchQuery, setSearchQuery } =
     useFileListStore();
 
@@ -43,6 +43,7 @@ export const Header: React.FC = () => {
                 let split = path.split('/');
                 split.pop();
                 setPath(split.length == 1 ? '/' : split.join('/'));
+                setSelectedFile(null);
               }}
               disabled={path == '/'}
             />
@@ -90,9 +91,10 @@ export const Header: React.FC = () => {
           <ServerStatus
             connection={selectedServer?.connection || null}
             refetchBtnToolTip='Refetch files'
-            onRefetchBtnClick={() =>
-              loadFiles(selectedServer?.connection || '', path)
-            }
+            onRefetchBtnClick={() => {
+              loadFiles(selectedServer?.connection || '', path);
+              setSelectedFile(null);
+            }}
           />
           <div>
             <Button
