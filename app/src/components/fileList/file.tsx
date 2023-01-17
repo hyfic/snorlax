@@ -29,35 +29,36 @@ export const File: React.FC<Props> = ({ file }) => {
       label={file.name}
       className='bg-app-dark3 border border-app-dark4 text-app-text'
     >
-      <div
-        onClick={handleFileClick}
-        className='flex flex-col items-center cursor-pointer transition-all duration-200 hover:opacity-60 group'
-      >
-        <div className='h-fit w-16 relative'>
-          <FileIcon
-            foldColor={file.isDir ? '#1E2330' : '#343B50'}
-            color={file.isDir ? '#1E2330' : '#2A3146'}
-            gradientColor={file.isDir ? '#1E2330' : '#2A3146'}
-            glyphColor={file.isDir ? '#1E2330' : '#5993E2'}
-          />
-          <div className='absolute top-0 w-full h-full flex items-center justify-center'>
-            {file.isDir ? (
-              <img src={FolderIcon} className='w-full' />
-            ) : (
-              <img
-                src={getFileIcon(file.name.toLowerCase()).iconPath}
-                alt=''
-                className='w-2/3'
-              />
-            )}
+      <a href='#top' className='w-full'>
+        <div
+          onClick={handleFileClick}
+          className='flex flex-col items-center cursor-pointer transition-all duration-200 hover:opacity-60 group'
+        >
+          <div className='h-fit w-16 relative'>
+            <FileIcon
+              foldColor={file.isDir ? '#1E2330' : '#343B50'}
+              color={file.isDir ? '#1E2330' : '#2A3146'}
+              gradientColor={file.isDir ? '#1E2330' : '#2A3146'}
+            />
+            <div className='absolute top-0 w-full h-full flex items-center justify-center'>
+              {file.isDir ? (
+                <img src={FolderIcon} className='w-full' />
+              ) : (
+                <img
+                  src={getFileIcon(file.name.toLowerCase()).iconPath}
+                  alt=''
+                  className='w-2/3'
+                />
+              )}
+            </div>
+          </div>
+          <div className='mt-3 w-full'>
+            <p className='truncate text-center text-app-text2 font-medium'>
+              {file.name}
+            </p>
           </div>
         </div>
-        <div className='mt-3 w-full'>
-          <p className='truncate text-center text-app-text2 font-medium'>
-            {file.name}
-          </p>
-        </div>
-      </div>
+      </a>
     </Tooltip>
   );
 };

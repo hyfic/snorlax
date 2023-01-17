@@ -39,7 +39,6 @@ export const SelectedFile: React.FC = () => {
             foldColor={'#343B50'}
             color={'#2A3146'}
             gradientColor={'#2A3146'}
-            glyphColor={'#5993E2'}
           />
           <div className='absolute top-0 w-full h-full flex items-center justify-center'>
             <img

@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
     useFileListStore();
 
   return (
-    <div>
+    <div id='top'>
       <Flex mt={3} alignItems='center' justifyContent='space-between'>
         <Flex alignItems='center'>
           <Tooltip
