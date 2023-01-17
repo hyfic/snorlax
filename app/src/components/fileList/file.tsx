@@ -13,7 +13,7 @@ interface Props {
 
 export const File: React.FC<Props> = ({ file }) => {
   const { path, setPath } = useFileListStore();
-  const { setSelectedFile } = useFilesStore();
+  const { setSelectedFile, selectedFile } = useFilesStore();
 
   const handleFileClick = () => {
     if (file.isDir) {
@@ -53,7 +53,13 @@ export const File: React.FC<Props> = ({ file }) => {
             </div>
           </div>
           <div className='mt-3 w-full'>
-            <p className='truncate text-center text-app-text2 font-medium'>
+            <p
+              className={`truncate text-center p-1 text-app-text2 border  font-medium ${
+                selectedFile?.name === file.name
+                  ? 'bg-app-dark3 border border-app-dark4 rounded-md'
+                  : 'border-app-dark2'
+              }`}
+            >
               {file.name}
             </p>
           </div>
