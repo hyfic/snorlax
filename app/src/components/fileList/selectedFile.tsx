@@ -127,14 +127,14 @@ export const SelectedFile: React.FC = () => {
                 onClick={onOpen}
               />
             </Tooltip>
-            <Tooltip
-              label='Rename file'
-              className='bg-app-dark3 border border-app-dark4 text-app-text'
+            <RenameWrapper
+              selectedFile={selectedFile}
+              connection={selectedServer?.connection || ''}
+              path={path}
             >
-              <RenameWrapper
-                selectedFile={selectedFile}
-                connection={selectedServer?.connection || ''}
-                path={path}
+              <Tooltip
+                label='Rename file'
+                className='bg-app-dark3 border border-app-dark4 text-app-text'
               >
                 <IconButton
                   aria-label='Rename file'
@@ -142,16 +142,16 @@ export const SelectedFile: React.FC = () => {
                   className='hover:bg-app-dark4'
                   icon={<FiEdit className='text-app-text' />}
                 />
-              </RenameWrapper>
-            </Tooltip>
-            <Tooltip
-              label='Delete file'
-              className='bg-app-dark3 border border-app-dark4 text-app-text'
+              </Tooltip>
+            </RenameWrapper>
+            <PermissionWrapper
+              description="Are you sure you want to delete this file ? This action can't be undone."
+              placeholder='Delete file'
+              onClick={deleteFileHandler}
             >
-              <PermissionWrapper
-                description="Are you sure you want to delete this file ? This action can't be undone."
-                placeholder='Delete file'
-                onClick={deleteFileHandler}
+              <Tooltip
+                label='Delete file'
+                className='bg-app-dark3 border border-app-dark4 text-app-text'
               >
                 <IconButton
                   aria-label='Delete file'
@@ -159,8 +159,8 @@ export const SelectedFile: React.FC = () => {
                   className='hover:bg-app-dark4'
                   icon={<FiTrash2 className='text-lg text-app-text' />}
                 />
-              </PermissionWrapper>
-            </Tooltip>
+              </Tooltip>
+            </PermissionWrapper>
             <Tooltip
               label='Close viewer'
               className='bg-app-dark3 border border-app-dark4 text-app-text'
