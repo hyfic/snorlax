@@ -4,6 +4,8 @@ import { FileType } from '@/types/file.type';
 import { renameFile } from '@/api/file.api';
 import { showToast } from '@/utils/showToast';
 import { useFilesStore } from '@/store/files.store';
+import { useServerStore } from '@/store/server.store';
+import { useFileListStore } from '@/store/filelist.store';
 import {
   Button,
   Input,
@@ -19,19 +21,19 @@ import {
 
 interface Props {
   selectedFile: FileType;
-  connection: string;
-  path: string;
+  afterRename?: () => void;
 }
 
 export const RenameWrapper: ReactComponent<Props> = ({
   selectedFile,
-  connection,
-  path,
+  afterRename,
   children,
 }) => {
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 
   const { renameFile: renameStoreFile } = useFilesStore();
+  const { selectedServer } = useServerStore();
+  const { path } = useFileListStore();
 
   const [fileName, setFileName] = useState(selectedFile.name);
   const [loading, setLoading] = useState(false);
@@ -44,7 +46,9 @@ export const RenameWrapper: ReactComponent<Props> = ({
   const renameServerHandler = () => {
     setLoading(true);
 
-    renameFile(connection, {
+    if (!selectedServer) return;
+
+    renameFile(selectedServer.connection, {
       oldPath: `${path}/${selectedFile.name}`,
       newPath: `${path}/${fileName}`,
     })
@@ -55,9 +59,12 @@ export const RenameWrapper: ReactComponent<Props> = ({
         });
         renameStoreFile(selectedFile.name, fileName);
         onClose(fileName);
+
+        if (afterRename) {
+          afterRename();
+        }
       })
       .catch((err) => {
-        console.log(err);
         showToast({
           title: 'Failed to rename file',
           description: err?.message,
@@ -105,7 +112,7 @@ export const RenameWrapper: ReactComponent<Props> = ({
               onClick={renameServerHandler}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
             >
-              Rename file
+              Rename {selectedFile.isDir ? 'folder' : 'file'}
             </Button>
           </ModalFooter>
         </ModalContent>
