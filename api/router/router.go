@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hyfic/snorlax/api/file"
 	"net/http"
@@ -14,7 +15,7 @@ func init() {
 }
 
 func StartServer(port int32) {
-	router.Use(CORSMiddleware())
+	router.Use(cors.Default())
 	router.Use(authorizationMiddleware()) // use authorization middleware
 
 	router.GET("/ping", pingRoute) // route to check if server is up
@@ -32,6 +33,8 @@ func StartServer(port int32) {
 	fileApi.PUT("/rename-file", renameFileRoute)
 	fileApi.DELETE("/delete-file", deleteFileRoute)
 	fileApi.POST("/upload", fileUploadRoute)
+
+	fileApi.Use(CORSMiddleware())
 
 	fileApi.Use()
 
@@ -111,26 +114,25 @@ func renameFolderRoute(context *gin.Context) {
 }
 
 func deleteFolderRoute(context *gin.Context) {
-	var requestBody RequestBody
-	if GetBodyFromRequest(context, &requestBody) != nil {
+	path, pathErr := GetPathFromParams(context)
+
+	if pathErr != nil {
 		return
 	}
 
-	err := file.DeleteFolder(requestBody.Path)
+	err := file.DeleteFolder(path)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"message": "deleted " + requestBody.Path + " successfully"})
+	context.JSON(http.StatusOK, gin.H{"message": "deleted " + path + " successfully"})
 }
 
 func viewFolderRoute(context *gin.Context) {
-	path := context.Query("path")
+	path, pathErr := GetPathFromParams(context)
 
-	if len(path) == 0 {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "path is not given."})
-		context.Abort()
+	if pathErr != nil {
 		return
 	}
 
@@ -144,11 +146,9 @@ func viewFolderRoute(context *gin.Context) {
 }
 
 func getFileInfoRoute(context *gin.Context) {
-	path := context.Query("path")
+	path, pathErr := GetPathFromParams(context)
 
-	if len(path) == 0 {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "path is not given."})
-		context.Abort()
+	if pathErr != nil {
 		return
 	}
 
@@ -176,6 +176,7 @@ func downloadRoute(context *gin.Context) {
 
 func renameFileRoute(context *gin.Context) {
 	var requestBody PutRequestBody
+
 	if GetBodyFromRequest(context, &requestBody) != nil {
 		return
 	}
@@ -190,18 +191,19 @@ func renameFileRoute(context *gin.Context) {
 }
 
 func deleteFileRoute(context *gin.Context) {
-	var requestBody RequestBody
-	if GetBodyFromRequest(context, &requestBody) != nil {
+	path, pathErr := GetPathFromParams(context)
+
+	if pathErr != nil {
 		return
 	}
 
-	err := file.DeleteFile(requestBody.Path)
+	err := file.DeleteFile(path)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"message": "deleted " + requestBody.Path + " successfully"})
+	context.JSON(http.StatusOK, gin.H{"message": "deleted " + path + " successfully"})
 }
 
 func fileUploadRoute(context *gin.Context) {
