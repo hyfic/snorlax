@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
+import EmptyFolder from '@/assets/empty_folder.svg';
 import { useFileListStore } from '@/store/filelist.store';
 import { useServerStore } from '@/store/server.store';
 import { useFilesStore } from '@/store/files.store';
 import { FileType } from '@/types/file.type';
 import { File } from './file';
-import { Flex } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 import { SelectedFile } from './selectedFile';
+import { FiUpload } from 'react-icons/fi';
 
 export const Files: React.FC = () => {
   const { path, searchQuery } = useFileListStore();
@@ -47,7 +49,24 @@ export const FileList: React.FC<FileListProps> = ({ loading, files }) => {
   return (
     <>
       {!loading && files.length == 0 && (
-        <p className='text-app-text2 font-medium'>No files</p>
+        <div className='h-[75vh] w-full flex flex-col items-center justify-center'>
+          <img src={EmptyFolder} alt='no files' className='w-24' />
+          <h2 className='text-xl font-medium text-app-text'>
+            No files in this directory !
+          </h2>
+          <div className='mt-2 w-full px-60 flex justify-center'>
+            <p className='text-app-text opacity-60 text-center'>
+              Maybe you can upload some files.
+            </p>
+          </div>
+          <Button
+            mt={5}
+            leftIcon={<FiUpload />}
+            className='text-app-text bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
+          >
+            Upload file
+          </Button>
+        </div>
       )}
       <div
         className={`w-full grid gap-5 ${
