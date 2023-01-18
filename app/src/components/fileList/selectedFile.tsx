@@ -15,6 +15,7 @@ import { deleteFile, getFileInfo } from '@/api/file.api';
 import { showToast } from '@/utils/showToast';
 import { PermissionWrapper } from '../permissionWrapper';
 import { RenameWrapper } from './renameWrapper';
+import { isImage } from '@/utils/extension';
 import {
   Button,
   Divider,
@@ -74,22 +75,32 @@ export const SelectedFile: React.FC = () => {
   return !selectedFile ? null : (
     <>
       <div className='ml-5'>
-        <div className='w-60 bg-app-dark1 px-5 py-8 rounded-lg flex items-center justify-center'>
-          <div className='h-fit w-2/3 relative'>
-            <FileIcon
-              foldColor={'#343B50'}
-              color={'#2A3146'}
-              gradientColor={'#2A3146'}
+        {isImage(selectedFile.name) ? (
+          <div className='w-60'>
+            <img
+              src={`${selectedServer?.connection}/storage/${path}/${selectedFile.name}`}
+              alt={selectedFile.name}
+              className='w-full h-full rounded-lg'
             />
-            <div className='absolute top-0 w-full h-full flex items-center justify-center'>
-              <img
-                src={getFileIcon(selectedFile.name.toLowerCase()).iconPath}
-                alt=''
-                className='w-2/3'
+          </div>
+        ) : (
+          <div className='w-60 bg-app-dark1 px-5 py-8 rounded-lg flex items-center justify-center'>
+            <div className='h-fit w-2/3 relative'>
+              <FileIcon
+                foldColor={'#343B50'}
+                color={'#2A3146'}
+                gradientColor={'#2A3146'}
               />
+              <div className='absolute top-0 w-full h-full flex items-center justify-center'>
+                <img
+                  src={getFileIcon(selectedFile.name.toLowerCase()).iconPath}
+                  alt=''
+                  className='w-2/3'
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className='mt-2 w-60 bg-app-dark3 border border-app-dark4 p-3 rounded-lg'>
           <p className='font-medium text-app-text'>{selectedFile.name}</p>
           <Flex mt={3} alignItems='center'>
