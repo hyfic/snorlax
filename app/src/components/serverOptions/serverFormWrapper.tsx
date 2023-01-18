@@ -4,6 +4,7 @@ import { ServerType } from '@/types/server.type';
 import { invoke } from '@tauri-apps/api';
 import { showToast } from '@/utils/showToast';
 import { useServerStore } from '@/store/server.store';
+import { useFileListStore } from '@/store/filelist.store';
 import {
   Button,
   Flex,
@@ -32,6 +33,7 @@ export const ServerForm: ReactComponent<Props> = ({ server, children }) => {
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 
   const { loadServers } = useServerStore();
+  const { setPath } = useFileListStore();
 
   const [loading, setLoading] = useState(false);
   const [connection, setConnection] = useState('');
@@ -120,6 +122,7 @@ export const ServerForm: ReactComponent<Props> = ({ server, children }) => {
         });
         onClose();
         loadServers(id);
+        setPath('/');
       })
       .catch((err) => {
         showToast({
