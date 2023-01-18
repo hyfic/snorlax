@@ -11,9 +11,8 @@ import { FiDownload, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useFileListStore } from '@/store/filelist.store';
 import { useServerStore } from '@/store/server.store';
 import { FileInfoType } from '@/types/file.type';
-import { deleteFile, getFileInfo } from '@/api/file.api';
-import { showToast } from '@/utils/showToast';
-import { PermissionWrapper } from '../permissionWrapper';
+import { getFileInfo } from '@/api/file.api';
+import { DeleteWrapper } from './deleteWrapper';
 import { RenameWrapper } from './renameWrapper';
 import { isImage } from '@/utils/extension';
 import {
@@ -31,11 +30,7 @@ import {
 export const SelectedFile: React.FC = () => {
   const { path } = useFileListStore();
   const { selectedServer } = useServerStore();
-  const {
-    selectedFile,
-    setSelectedFile,
-    deleteFile: deleteFileFromStore,
-  } = useFilesStore();
+  const { selectedFile, setSelectedFile } = useFilesStore();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -50,27 +45,6 @@ export const SelectedFile: React.FC = () => {
       })
       .catch(console.log);
   }, [selectedFile]);
-
-  const deleteFileHandler = () => {
-    if (!selectedServer || !selectedFile) return;
-
-    deleteFile(selectedServer?.connection, path, selectedFile?.name)
-      .then(() => {
-        deleteFileFromStore(selectedFile);
-        showToast({
-          title: 'Deleted file successfully',
-          status: 'success',
-        });
-      })
-      .catch((err) => {
-        showToast({
-          title: 'Failed to delete file',
-          description: err?.message,
-          duration: 5000,
-          status: 'error',
-        });
-      });
-  };
 
   return !selectedFile ? null : (
     <>
@@ -127,11 +101,7 @@ export const SelectedFile: React.FC = () => {
                 onClick={onOpen}
               />
             </Tooltip>
-            <RenameWrapper
-              selectedFile={selectedFile}
-              connection={selectedServer?.connection || ''}
-              path={path}
-            >
+            <RenameWrapper selectedFile={selectedFile}>
               <Tooltip
                 label='Rename file'
                 className='bg-app-dark3 border border-app-dark4 text-app-text'
@@ -144,11 +114,7 @@ export const SelectedFile: React.FC = () => {
                 />
               </Tooltip>
             </RenameWrapper>
-            <PermissionWrapper
-              description="Are you sure you want to delete this file ? This action can't be undone."
-              placeholder='Delete file'
-              onClick={deleteFileHandler}
-            >
+            <DeleteWrapper selectedFile={selectedFile}>
               <Tooltip
                 label='Delete file'
                 className='bg-app-dark3 border border-app-dark4 text-app-text'
@@ -160,7 +126,7 @@ export const SelectedFile: React.FC = () => {
                   icon={<FiTrash2 className='text-lg text-app-text' />}
                 />
               </Tooltip>
-            </PermissionWrapper>
+            </DeleteWrapper>
             <Tooltip
               label='Close viewer'
               className='bg-app-dark3 border border-app-dark4 text-app-text'
