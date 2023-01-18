@@ -1,6 +1,7 @@
 package router
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -27,4 +28,17 @@ func GetBodyFromRequest[T RequestBody | PutRequestBody | FileUploadRequestBody](
 	}
 
 	return err
+}
+
+func GetPathFromParams(context *gin.Context) (string, error) {
+	path := context.Query("path")
+
+	if len(path) == 0 {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "path is not given."})
+		context.Abort()
+
+		return "", errors.New("path is not provided")
+	}
+
+	return path, nil
 }
