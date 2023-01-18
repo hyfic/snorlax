@@ -7,11 +7,14 @@ import { getFileIcon } from '@/utils/icon';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { HiOutlineEye } from 'react-icons/hi2';
 import { IoMdClose } from 'react-icons/io';
-import { FiDownload } from 'react-icons/fi';
+import { FiDownload, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useFileListStore } from '@/store/filelist.store';
 import { useServerStore } from '@/store/server.store';
 import { FileInfoType } from '@/types/file.type';
-import { getFileInfo } from '@/api/file.api';
+import { deleteFile, getFileInfo } from '@/api/file.api';
+import { showToast } from '@/utils/showToast';
+import { PermissionWrapper } from '../permissionWrapper';
+import { RenameWrapper } from './renameWrapper';
 import {
   Button,
   Divider,
@@ -25,9 +28,13 @@ import {
 } from '@chakra-ui/react';
 
 export const SelectedFile: React.FC = () => {
-  const { selectedFile, setSelectedFile } = useFilesStore();
   const { path } = useFileListStore();
   const { selectedServer } = useServerStore();
+  const {
+    selectedFile,
+    setSelectedFile,
+    deleteFile: deleteFileFromStore,
+  } = useFilesStore();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -42,6 +49,27 @@ export const SelectedFile: React.FC = () => {
       })
       .catch(console.log);
   }, [selectedFile]);
+
+  const deleteFileHandler = () => {
+    if (!selectedServer || !selectedFile) return;
+
+    deleteFile(selectedServer?.connection, path, selectedFile?.name)
+      .then(() => {
+        deleteFileFromStore(selectedFile);
+        showToast({
+          title: 'Deleted file successfully',
+          status: 'success',
+        });
+      })
+      .catch((err) => {
+        showToast({
+          title: 'Failed to delete file',
+          description: err?.message,
+          duration: 5000,
+          status: 'error',
+        });
+      });
+  };
 
   return !selectedFile ? null : (
     <>
@@ -89,11 +117,45 @@ export const SelectedFile: React.FC = () => {
               />
             </Tooltip>
             <Tooltip
+              label='Rename file'
+              className='bg-app-dark3 border border-app-dark4 text-app-text'
+            >
+              <RenameWrapper
+                selectedFile={selectedFile}
+                connection={selectedServer?.connection || ''}
+                path={path}
+              >
+                <IconButton
+                  aria-label='Rename file'
+                  variant='ghost'
+                  className='hover:bg-app-dark4'
+                  icon={<FiEdit className='text-app-text' />}
+                />
+              </RenameWrapper>
+            </Tooltip>
+            <Tooltip
+              label='Delete file'
+              className='bg-app-dark3 border border-app-dark4 text-app-text'
+            >
+              <PermissionWrapper
+                description="Are you sure you want to delete this file ? This action can't be undone."
+                placeholder='Delete file'
+                onClick={deleteFileHandler}
+              >
+                <IconButton
+                  aria-label='Delete file'
+                  variant='ghost'
+                  className='hover:bg-app-dark4'
+                  icon={<FiTrash2 className='text-lg text-app-text' />}
+                />
+              </PermissionWrapper>
+            </Tooltip>
+            <Tooltip
               label='Close viewer'
               className='bg-app-dark3 border border-app-dark4 text-app-text'
             >
               <IconButton
-                aria-label='Favorite'
+                aria-label='Close viewer'
                 variant='ghost'
                 className='hover:bg-app-dark4'
                 icon={<IoMdClose className='text-xl text-app-text' />}
