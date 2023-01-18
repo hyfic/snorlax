@@ -5,7 +5,7 @@ import { useServerStore } from '@/store/server.store';
 import { useFilesStore } from '@/store/files.store';
 import { FileType } from '@/types/file.type';
 import { File } from './file';
-import { Button, Flex } from '@chakra-ui/react';
+import { Button, Flex, Spinner } from '@chakra-ui/react';
 import { SelectedFile } from './selectedFile';
 import { FiUpload } from 'react-icons/fi';
 
@@ -22,16 +22,22 @@ export const Files: React.FC = () => {
   return (
     <Flex mt={10} w='full'>
       <div className='w-full'>
-        {loading && <p className='text-app-text2 font-medium'>Loading ...</p>}
-        <FileList
-          files={files.filter((file) =>
-            file.name
-              .toLowerCase()
-              .trim()
-              .includes(searchQuery.toLowerCase().trim())
-          )}
-          loading={loading}
-        />
+        {loading && (
+          <div className='h-[75vh] w-full flex flex-col items-center justify-center'>
+            <Spinner />
+          </div>
+        )}
+        {!loading && (
+          <FileList
+            files={files.filter((file) =>
+              file.name
+                .toLowerCase()
+                .trim()
+                .includes(searchQuery.toLowerCase().trim())
+            )}
+            loading={loading}
+          />
+        )}
       </div>
       <SelectedFile />
     </Flex>
