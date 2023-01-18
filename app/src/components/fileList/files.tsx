@@ -8,6 +8,7 @@ import { File } from './file';
 import { Button, Flex, Spinner } from '@chakra-ui/react';
 import { SelectedFile } from './selectedFile';
 import { FiUpload } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 
 export const Files: React.FC = () => {
   const { path, searchQuery } = useFileListStore();
@@ -49,6 +50,26 @@ interface FileListProps {
   files: FileType[];
 }
 
+const container = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.005,
+      staggerChildren: 0.005,
+    },
+  },
+};
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+  },
+};
+
 export const FileList: React.FC<FileListProps> = ({ loading, files }) => {
   const { selectedFile } = useFilesStore();
 
@@ -74,15 +95,20 @@ export const FileList: React.FC<FileListProps> = ({ loading, files }) => {
           </Button>
         </div>
       )}
-      <div
+      <motion.div
+        variants={container}
         className={`w-full grid gap-5 ${
           selectedFile ? 'grid-cols-5' : 'grid-cols-6'
         }`}
+        initial='hidden'
+        animate='visible'
       >
         {files.map((file, idx) => (
-          <File key={idx} file={file} />
+          <motion.div key={idx} variants={item}>
+            <File file={file} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </>
   );
 };
