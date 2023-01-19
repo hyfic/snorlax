@@ -45,10 +45,6 @@ export const File: React.FC<Props> = ({ file }) => {
     e.preventDefault();
   };
 
-  window.addEventListener('click', (e) => {
-    console.log(e.button);
-  });
-
   return (
     <>
       <Tooltip
