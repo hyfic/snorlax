@@ -43,3 +43,22 @@ export const createFolder = (
     },
   });
 };
+
+export const uploadFile = (
+  connection: string,
+  path: string,
+  file: File,
+  fileName: string
+) => {
+  const formData = new FormData();
+
+  formData.append('file', file);
+  formData.append('fileName', fileName);
+  formData.append('filePath', path);
+
+  return axios.post(`${connection}/file/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
