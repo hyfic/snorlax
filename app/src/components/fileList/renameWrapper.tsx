@@ -43,7 +43,7 @@ export const RenameWrapper: ReactComponent<Props> = ({
     closeModal();
   };
 
-  const renameServerHandler = () => {
+  const renameFileHandler = () => {
     setLoading(true);
 
     if (!selectedServer) return;
@@ -54,7 +54,9 @@ export const RenameWrapper: ReactComponent<Props> = ({
     })
       .then(() => {
         showToast({
-          title: 'Renamed file successfully',
+          title: `Renamed ${
+            selectedFile.isDir ? 'folder' : 'file'
+          } successfully`,
           status: 'success',
         });
         renameStoreFile(selectedFile.name, fileName);
@@ -66,7 +68,7 @@ export const RenameWrapper: ReactComponent<Props> = ({
       })
       .catch((err) => {
         showToast({
-          title: 'Failed to rename file',
+          title: `Failed to rename ${selectedFile.isDir ? 'folder' : 'file'}`,
           description: err?.message,
           status: 'error',
           duration: 5000,
@@ -109,7 +111,7 @@ export const RenameWrapper: ReactComponent<Props> = ({
             <Button
               disabled={loading || fileName.trim().length === 0}
               isLoading={loading}
-              onClick={renameServerHandler}
+              onClick={renameFileHandler}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
             >
               Rename {selectedFile.isDir ? 'folder' : 'file'}
