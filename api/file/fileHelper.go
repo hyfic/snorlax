@@ -83,6 +83,6 @@ func RenameFile(oldPath string, newPath string) error {
 // Delete file
 
 func DeleteFile(path string) error {
-	err := os.Remove(StorageFolder + path)
+	err := os.RemoveAll(StorageFolder + path)
 	return err
 }
