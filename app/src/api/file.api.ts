@@ -29,3 +29,17 @@ export const renameFile = (connection: string, data: any) => {
     data,
   });
 };
+
+export const createFolder = (
+  connection: string,
+  path: string,
+  folderName: string
+) => {
+  return axios({
+    url: `${connection}/file/create-folder`,
+    method: 'POST',
+    data: {
+      path: `${path}/${folderName}`,
+    },
+  });
+};
