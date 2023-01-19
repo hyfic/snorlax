@@ -9,6 +9,7 @@ import { Button, Flex, Spinner } from '@chakra-ui/react';
 import { SelectedFile } from './selectedFile';
 import { FiUpload } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import { UploadFileWrapper } from './uploadFileWrapper';
 
 export const Files: React.FC = () => {
   const { path, searchQuery } = useFileListStore();
@@ -86,13 +87,15 @@ export const FileList: React.FC<FileListProps> = ({ loading, files }) => {
               Maybe you can upload some files.
             </p>
           </div>
-          <Button
-            mt={5}
-            leftIcon={<FiUpload />}
-            className='text-app-text bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
-          >
-            Upload file
-          </Button>
+          <UploadFileWrapper>
+            <Button
+              mt={5}
+              leftIcon={<FiUpload />}
+              className='text-app-text bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
+            >
+              Upload file
+            </Button>
+          </UploadFileWrapper>
         </div>
       )}
       <motion.div

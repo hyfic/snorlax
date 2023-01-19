@@ -6,6 +6,8 @@ import { useServerStore } from '@/store/server.store';
 import { BiChevronDown } from 'react-icons/bi';
 import { ServerStatus } from '../serverOptions/serverStatus';
 import { useFilesStore } from '@/store/files.store';
+import { CreateFolderWrapper } from './createFolderWrapper';
+import { UploadFileWrapper } from './uploadFileWrapper';
 import {
   Button,
   Flex,
@@ -19,7 +21,6 @@ import {
   MenuList,
   Tooltip,
 } from '@chakra-ui/react';
-import { CreateFolderWrapper } from './createFolderWrapper';
 
 export const Header: React.FC = () => {
   const { selectedServer } = useServerStore();
@@ -97,7 +98,7 @@ export const Header: React.FC = () => {
               setSelectedFile(null);
             }}
           />
-          <div>
+          <UploadFileWrapper>
             <Button
               mx={1}
               leftIcon={<FiUpload />}
@@ -105,7 +106,7 @@ export const Header: React.FC = () => {
             >
               Upload file
             </Button>
-          </div>
+          </UploadFileWrapper>
           <Menu>
             <MenuButton>
               <IconButton
@@ -115,12 +116,14 @@ export const Header: React.FC = () => {
               />
             </MenuButton>
             <MenuList className='bg-app-dark3'>
-              <MenuItem
-                icon={<FiUpload className='text-lg' />}
-                className='bg-app-dark3 hover:bg-app-dark4'
-              >
-                Upload file
-              </MenuItem>
+              <UploadFileWrapper>
+                <MenuItem
+                  icon={<FiUpload className='text-lg' />}
+                  className='bg-app-dark3 hover:bg-app-dark4'
+                >
+                  Upload file
+                </MenuItem>
+              </UploadFileWrapper>
               <CreateFolderWrapper>
                 <MenuItem
                   icon={<FiFolderPlus className='text-lg' />}
