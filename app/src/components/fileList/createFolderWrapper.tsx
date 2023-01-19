@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ReactComponent } from '@/types/react.type';
-import { FileType } from '@/types/file.type';
-import { renameFile } from '@/api/file.api';
+import { createFolder } from '@/api/file.api';
 import { showToast } from '@/utils/showToast';
 import { useFilesStore } from '@/store/files.store';
 import { useServerStore } from '@/store/server.store';
@@ -20,55 +19,51 @@ import {
 } from '@chakra-ui/react';
 
 interface Props {
-  selectedFile: FileType;
-  afterRename?: () => void;
+  afterCreate?: () => void;
 }
 
-export const RenameWrapper: ReactComponent<Props> = ({
-  selectedFile,
-  afterRename,
+export const CreateFolderWrapper: ReactComponent<Props> = ({
+  afterCreate,
   children,
 }) => {
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 
-  const { renameFile: renameStoreFile } = useFilesStore();
+  const { addFile } = useFilesStore();
   const { selectedServer } = useServerStore();
   const { path } = useFileListStore();
 
-  const [fileName, setFileName] = useState(selectedFile.name);
+  const [folderName, setFolderName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onClose = (name?: string) => {
-    setFileName(name || selectedFile.name);
+  const onClose = () => {
+    setFolderName('');
     closeModal();
   };
 
-  const renameFileHandler = () => {
+  const createFolderHandler = () => {
     setLoading(true);
 
     if (!selectedServer) return;
 
-    renameFile(selectedServer.connection, {
-      oldPath: `${path}/${selectedFile.name}`,
-      newPath: `${path}/${fileName}`,
-    })
+    createFolder(selectedServer.connection, path, folderName)
       .then(() => {
         showToast({
-          title: `Renamed ${
-            selectedFile.isDir ? 'folder' : 'file'
-          } successfully`,
+          title: 'Created folder successfully',
           status: 'success',
         });
-        renameStoreFile(selectedFile.name, fileName);
-        onClose(fileName);
+        addFile({
+          name: folderName,
+          isDir: true,
+        });
+        onClose();
 
-        if (afterRename) {
-          afterRename();
+        if (afterCreate) {
+          afterCreate();
         }
       })
       .catch((err) => {
         showToast({
-          title: `Failed to rename ${selectedFile.isDir ? 'folder' : 'file'}`,
+          title: 'Failed to create folder',
           description: err?.message,
           status: 'error',
           duration: 5000,
@@ -89,14 +84,14 @@ export const RenameWrapper: ReactComponent<Props> = ({
       >
         <ModalOverlay />
         <ModalContent className='bg-app-dark3'>
-          <ModalHeader>Rename file</ModalHeader>
+          <ModalHeader>Create folder</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input
               variant='filled'
-              placeholder='File name'
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
+              placeholder='Folder name'
+              value={folderName}
+              onChange={(e) => setFolderName(e.target.value)}
             />
           </ModalBody>
           <ModalFooter>
@@ -109,12 +104,12 @@ export const RenameWrapper: ReactComponent<Props> = ({
               Cancel
             </Button>
             <Button
-              disabled={loading || fileName.trim().length === 0}
+              disabled={loading || folderName.trim().length === 0}
               isLoading={loading}
-              onClick={renameFileHandler}
+              onClick={createFolderHandler}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
             >
-              Rename {selectedFile.isDir ? 'folder' : 'file'}
+              Create folder
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -29,3 +29,36 @@ export const renameFile = (connection: string, data: any) => {
     data,
   });
 };
+
+export const createFolder = (
+  connection: string,
+  path: string,
+  folderName: string
+) => {
+  return axios({
+    url: `${connection}/file/create-folder`,
+    method: 'POST',
+    data: {
+      path: `${path}/${folderName}`,
+    },
+  });
+};
+
+export const uploadFile = (
+  connection: string,
+  path: string,
+  file: File,
+  fileName: string
+) => {
+  const formData = new FormData();
+
+  formData.append('file', file);
+  formData.append('fileName', fileName);
+  formData.append('filePath', path);
+
+  return axios.post(`${connection}/file/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};

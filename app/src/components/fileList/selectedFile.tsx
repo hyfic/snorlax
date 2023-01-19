@@ -11,10 +11,10 @@ import { FiDownload, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useFileListStore } from '@/store/filelist.store';
 import { useServerStore } from '@/store/server.store';
 import { FileInfoType } from '@/types/file.type';
-import { deleteFile, getFileInfo } from '@/api/file.api';
-import { showToast } from '@/utils/showToast';
-import { PermissionWrapper } from '../permissionWrapper';
+import { getFileInfo } from '@/api/file.api';
+import { DeleteWrapper } from './deleteWrapper';
 import { RenameWrapper } from './renameWrapper';
+import { isImage } from '@/utils/extension';
 import {
   Button,
   Divider,
@@ -30,11 +30,7 @@ import {
 export const SelectedFile: React.FC = () => {
   const { path } = useFileListStore();
   const { selectedServer } = useServerStore();
-  const {
-    selectedFile,
-    setSelectedFile,
-    deleteFile: deleteFileFromStore,
-  } = useFilesStore();
+  const { selectedFile, setSelectedFile } = useFilesStore();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -50,46 +46,35 @@ export const SelectedFile: React.FC = () => {
       .catch(console.log);
   }, [selectedFile]);
 
-  const deleteFileHandler = () => {
-    if (!selectedServer || !selectedFile) return;
-
-    deleteFile(selectedServer?.connection, path, selectedFile?.name)
-      .then(() => {
-        deleteFileFromStore(selectedFile);
-        showToast({
-          title: 'Deleted file successfully',
-          status: 'success',
-        });
-      })
-      .catch((err) => {
-        showToast({
-          title: 'Failed to delete file',
-          description: err?.message,
-          duration: 5000,
-          status: 'error',
-        });
-      });
-  };
-
   return !selectedFile ? null : (
     <>
       <div className='ml-5'>
-        <div className='w-60 bg-app-dark1 px-5 py-8 rounded-lg flex items-center justify-center'>
-          <div className='h-fit w-2/3 relative'>
-            <FileIcon
-              foldColor={'#343B50'}
-              color={'#2A3146'}
-              gradientColor={'#2A3146'}
+        {isImage(selectedFile.name) ? (
+          <div className='w-60'>
+            <img
+              src={`${selectedServer?.connection}/storage/${path}/${selectedFile.name}`}
+              alt={selectedFile.name}
+              className='w-full h-full rounded-lg'
             />
-            <div className='absolute top-0 w-full h-full flex items-center justify-center'>
-              <img
-                src={getFileIcon(selectedFile.name.toLowerCase()).iconPath}
-                alt=''
-                className='w-2/3'
+          </div>
+        ) : (
+          <div className='w-60 bg-app-dark1 px-5 py-8 rounded-lg flex items-center justify-center'>
+            <div className='h-fit w-2/3 relative'>
+              <FileIcon
+                foldColor={'#343B50'}
+                color={'#2A3146'}
+                gradientColor={'#2A3146'}
               />
+              <div className='absolute top-0 w-full h-full flex items-center justify-center'>
+                <img
+                  src={getFileIcon(selectedFile.name.toLowerCase()).iconPath}
+                  alt=''
+                  className='w-2/3'
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className='mt-2 w-60 bg-app-dark3 border border-app-dark4 p-3 rounded-lg'>
           <p className='font-medium text-app-text'>{selectedFile.name}</p>
           <Flex mt={3} alignItems='center'>
@@ -116,14 +101,10 @@ export const SelectedFile: React.FC = () => {
                 onClick={onOpen}
               />
             </Tooltip>
-            <Tooltip
-              label='Rename file'
-              className='bg-app-dark3 border border-app-dark4 text-app-text'
-            >
-              <RenameWrapper
-                selectedFile={selectedFile}
-                connection={selectedServer?.connection || ''}
-                path={path}
+            <RenameWrapper selectedFile={selectedFile}>
+              <Tooltip
+                label='Rename file'
+                className='bg-app-dark3 border border-app-dark4 text-app-text'
               >
                 <IconButton
                   aria-label='Rename file'
@@ -131,16 +112,12 @@ export const SelectedFile: React.FC = () => {
                   className='hover:bg-app-dark4'
                   icon={<FiEdit className='text-app-text' />}
                 />
-              </RenameWrapper>
-            </Tooltip>
-            <Tooltip
-              label='Delete file'
-              className='bg-app-dark3 border border-app-dark4 text-app-text'
-            >
-              <PermissionWrapper
-                description="Are you sure you want to delete this file ? This action can't be undone."
-                placeholder='Delete file'
-                onClick={deleteFileHandler}
+              </Tooltip>
+            </RenameWrapper>
+            <DeleteWrapper selectedFile={selectedFile}>
+              <Tooltip
+                label='Delete file'
+                className='bg-app-dark3 border border-app-dark4 text-app-text'
               >
                 <IconButton
                   aria-label='Delete file'
@@ -148,8 +125,8 @@ export const SelectedFile: React.FC = () => {
                   className='hover:bg-app-dark4'
                   icon={<FiTrash2 className='text-lg text-app-text' />}
                 />
-              </PermissionWrapper>
-            </Tooltip>
+              </Tooltip>
+            </DeleteWrapper>
             <Tooltip
               label='Close viewer'
               className='bg-app-dark3 border border-app-dark4 text-app-text'
