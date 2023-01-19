@@ -8,6 +8,7 @@ interface FilesStore {
   selectedFile: FileType | null;
   loading: boolean;
   setSelectedFile: (selectedFile: FileType | null) => void;
+  addFile: (file: FileType) => void;
   deleteFile: (deletedFile: FileType) => void;
   renameFile: (oldName: string, newName: string) => void;
   loadFiles: (connection: string, path: string) => void;
@@ -18,6 +19,11 @@ export const useFilesStore = create<FilesStore>((set) => ({
   selectedFile: null,
   loading: false,
   setSelectedFile: (selectedFile) => set({ selectedFile }),
+  addFile(file) {
+    set((state) => ({
+      files: [...state.files, file],
+    }));
+  },
   deleteFile(deletedFile) {
     set((state) => ({
       files: state.files.filter((file) => file.name !== deletedFile.name),
