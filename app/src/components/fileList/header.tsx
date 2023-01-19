@@ -19,6 +19,7 @@ import {
   MenuList,
   Tooltip,
 } from '@chakra-ui/react';
+import { CreateFolderWrapper } from './createFolderWrapper';
 
 export const Header: React.FC = () => {
   const { selectedServer } = useServerStore();
@@ -120,12 +121,14 @@ export const Header: React.FC = () => {
               >
                 Upload file
               </MenuItem>
-              <MenuItem
-                icon={<FiFolderPlus className='text-lg' />}
-                className='bg-app-dark3 hover:bg-app-dark4'
-              >
-                New folder
-              </MenuItem>
+              <CreateFolderWrapper>
+                <MenuItem
+                  icon={<FiFolderPlus className='text-lg' />}
+                  className='bg-app-dark3 hover:bg-app-dark4'
+                >
+                  New folder
+                </MenuItem>
+              </CreateFolderWrapper>
             </MenuList>
           </Menu>
         </Flex>
