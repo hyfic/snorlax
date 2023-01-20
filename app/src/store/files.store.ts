@@ -23,6 +23,7 @@ export const useFilesStore = create<FilesStore>((set) => ({
     set((state) => ({
       files: [...state.files, file],
     }));
+    set({ selectedFile: file.isDir ? null : file });
   },
   deleteFile(deletedFile) {
     set((state) => ({
