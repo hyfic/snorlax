@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReactComponent } from '@/types/react.type';
 import { showToast } from '@/utils/showToast';
 import { useFilesStore } from '@/store/files.store';
@@ -29,6 +29,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
 
   const [fileName, setFileName] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [isThereDuplicate, setIsThereDuplicate] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onClose = () => {
@@ -41,30 +42,12 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
 
     if (!selectedServer || !file) return;
 
-    let fileName = file.name;
-    let duplicate = files.filter((f) => f.name === file.name);
-
-    if (duplicate.length > 0) {
-      fileName = duplicate[0].name;
-
-      let split = fileName.split('.');
-
-      if (split.length > 1) {
-        let ext = split[split.length - 1];
-        split.pop();
-        fileName = split.join('.') + ' (1).' + ext;
-      } else {
-        fileName = fileName + ' (1)';
-      }
-    }
-
     uploadFile(selectedServer.connection, path, file, fileName)
-      .then(({ data }) => {
+      .then(() => {
         showToast({
           title: 'Uploaded file successfully',
           status: 'success',
         });
-        console.log(data);
         addFile({
           name: fileName,
           isDir: false,
@@ -82,6 +65,11 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
       })
       .finally(() => setLoading(false));
   };
+
+  useEffect(() => {
+    let duplicate = files.filter((f) => f.name === fileName);
+    setIsThereDuplicate(duplicate.length !== 0);
+  }, [fileName]);
 
   return (
     <>
@@ -104,6 +92,11 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
               onChange={(e) => setFileName(e.target.value)}
               disabled={loading}
             />
+            {isThereDuplicate && (
+              <p className='mt-2 text-rose-300'>
+                File already exists, change filename
+              </p>
+            )}
             <Button
               mt={2}
               w='full'
@@ -111,7 +104,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
               onClick={() => imageInputRef.current.click()}
               disabled={loading}
             >
-              {file?.name || 'Select a file'}
+              {file?.name ? 'Change file' : 'Select a file'}
             </Button>
 
             <input
@@ -126,6 +119,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
 
                 let file = e.target.files[0];
                 setFile(file);
+                setFileName(file.name);
               }}
             />
           </ModalBody>
@@ -139,7 +133,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
               Cancel
             </Button>
             <Button
-              disabled={loading || file == null}
+              disabled={loading || file == null || isThereDuplicate}
               isLoading={loading}
               onClick={handleFileUpload}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
