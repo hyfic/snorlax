@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactComponent } from '@/types/react.type';
 import { FileType } from '@/types/file.type';
 import { renameFile } from '@/api/file.api';
@@ -31,12 +31,23 @@ export const RenameWrapper: ReactComponent<Props> = ({
 }) => {
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 
-  const { renameFile: renameStoreFile } = useFilesStore();
+  const { renameFile: renameStoreFile, files } = useFilesStore();
   const { selectedServer } = useServerStore();
   const { path } = useFileListStore();
 
   const [fileName, setFileName] = useState(selectedFile.name);
+  const [isThereDuplicate, setIsThereDuplicate] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (fileName === selectedFile.name) {
+      setIsThereDuplicate(false);
+      return;
+    }
+
+    let duplicate = files.filter((f) => f.name === fileName);
+    setIsThereDuplicate(duplicate.length !== 0);
+  }, [fileName]);
 
   const onClose = (name?: string) => {
     setFileName(name || selectedFile.name);
@@ -98,6 +109,12 @@ export const RenameWrapper: ReactComponent<Props> = ({
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
             />
+            {isThereDuplicate && (
+              <p className='mt-2 text-rose-300'>
+                {selectedFile.isDir ? 'Folder' : 'File'} already exists, change{' '}
+                {selectedFile.isDir ? 'folder name' : 'filename'}
+              </p>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button
@@ -109,7 +126,12 @@ export const RenameWrapper: ReactComponent<Props> = ({
               Cancel
             </Button>
             <Button
-              disabled={loading || fileName.trim().length === 0}
+              disabled={
+                loading ||
+                fileName.trim().length === 0 ||
+                isThereDuplicate ||
+                fileName === selectedFile.name
+              }
               isLoading={loading}
               onClick={renameFileHandler}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
