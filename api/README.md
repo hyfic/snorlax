@@ -1,79 +1,165 @@
-# 📁 SNORLAX API
+# SNORLAX API
 
 > File server for snorlax written in golang.
 
-## DOCUMENTATION
+## SETUP
 
-1. `GET` : `/ping`
+Install packages
 
-   > To make sure server is up
-
-2. `POST` : `/file/create-folder`
-
-```json
-{
-  "path": "{folderpath}/{foldername}"
-}
+```bash
+$ go get
 ```
 
-2. `PUT` : `/file/rename-folder`
+Run server
 
-```json
-{
-  "oldPath": "{current folder path}",
-  "newPath": "{new folder path}"
-}
+```bash
+$ go run main.go
 ```
 
-3. `DELETE` : `/file/delete-folder`
+## API DOCUMENTATION
+
+### `GET`:`/ping`
+
+> To check if server is online or not
+
+**RESPONSE**
 
 ```json
-{
-  "path": "{folder path}"
-}
+{ "message": "ok" }
 ```
 
-4. `GET` : `/file/view-folder`
+### `GET`:`/file/view-folder`
 
-```json
-// Request
-{
-  "path": "{folderpath}"
-}
+> Get contents of given folder
+
+**QUERY**
+
+```
+?path={folderPath}
 ```
 
-```json
-// Response
+**RESPONSE**
 
+```json
 [
-  {
-    name: "string",
-    isDir: bool,
-  }
+	{
+		"name": "fileName",
+		"isDir": true/false,
+	}
 ]
 ```
 
-5. `POST` : `/file/upload`
+### `GET`:`/file/get-file-info`
 
-   > Pass file with `file` attribute
+> Get file details for given file
 
-1. `GET`: `/storage/{filepath}`
+**QUERY**
 
-   > Return direct file
+```
+?path={filePath}
+```
 
-1. `PUT` : `/file/rename-file`
+**RESPONSE**
 
 ```json
 {
-  "oldPath": "{old full file path}",
-  "newPath": "{new full file path}"
+	"name": "fileName",
+	"isDir": true/false,
+	"size": 100, // file size in bytes
+	"lastModified": "last modified time in UTC"
 }
 ```
 
-4. `DELETE` : `/file/delete-file`
+### `GET`:`/file/download`
+
+> Get direct download link for given file path
+
+**QUERY**
+
+```
+?path={filePath}&name={fileName}
+```
+
+**RESPONSE**
+
+Direct file link
+
+### `POST`:`/file/create-folder`
+
+> Create folder in given path
+
+**REQUEST BODY**
 
 ```json
 {
-  "path": "{filepath}"
+  "path": "folderPath"
+}
+```
+
+**RESPONSE**
+
+```json
+{
+  "message": "{folder} created"
+}
+```
+
+### `POST`:`/file/upload`
+
+> Upload file to server
+
+**REQUEST POSTFORM**
+
+```json
+{
+  "fileName": "{filename}",
+  "filePath": "{filePath}"
+}
+```
+
+**RESPONSE**
+
+```json
+{
+  "message": "Uploadded file successfully."
+}
+```
+
+### `PUT`:`/file/rename-file`
+
+> Rename file/folder
+
+**REQUEST BODY**
+
+```json
+{
+  "oldPath": "{old file path}",
+  "newPath": "{new file path}"
+}
+```
+
+**RESPONSE**
+
+```json
+{
+  "message": "Renamed {oldPath} to {newPath}"
+}
+```
+
+### `DELETE`:`/file/delete-file`
+
+> Delete given file
+
+**QUERY**
+
+```
+?path={filePath}
+```
+
+**RESPONSE**
+
+```json
+{
+  "message": "deleted {filePath} successfully"
 }
 ```
