@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+import SnorlaxLogo from '@/assets/logo.svg';
+import { motion } from 'framer-motion';
 import { FiSearch } from 'react-icons/fi';
 import { IoMdRefresh } from 'react-icons/io';
+import { ServerForm } from '@/components/serverOptions/serverFormWrapper';
+import { useServerStore } from '@/store/server.store';
+import { ServerDisplay } from '@/components/serverOptions/serverDisplay';
 import {
   Button,
   Flex,
@@ -8,14 +13,24 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Spinner,
   Tooltip,
 } from '@chakra-ui/react';
-import { ServerForm } from '@/components/serverOptions/serverFormWrapper';
-import { useServerStore } from '@/store/server.store';
-import { ServerDisplay } from '@/components/serverOptions/serverDisplay';
+
+const container = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.005,
+      staggerChildren: 0.005,
+    },
+  },
+};
 
 export const SettingsPage: React.FC = () => {
-  const { servers, loadServers } = useServerStore();
+  const { servers, loadServers, loading } = useServerStore();
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -67,29 +82,68 @@ export const SettingsPage: React.FC = () => {
           </Tooltip>
         </Flex>
       </Flex>
-      <div className='mt-5'>
+      <motion.div
+        variants={container}
+        className='mt-5'
+        initial='hidden'
+        animate='visible'
+      >
+        {loading && (
+          <div className='h-[75vh] w-full flex flex-col items-center justify-center'>
+            <Spinner />
+          </div>
+        )}
         {searchQuery.trim().length !== 0 && (
           <h2 className='mb-5 text-xl font-medium'>
             Searching for {searchQuery} ...
           </h2>
         )}
-        {servers.filter((server) =>
-          server.name
-            .trim()
-            .toLowerCase()
-            .includes(searchQuery.trim().toLowerCase())
-        ).length == 0 && <h2 className='text-app-text2'>No results</h2>}
-        {servers
-          .filter((server) =>
+        {!loading &&
+          servers.filter((server) =>
             server.name
               .trim()
               .toLowerCase()
               .includes(searchQuery.trim().toLowerCase())
-          )
-          .map((server) => (
-            <ServerDisplay server={server} key={server.id} />
-          ))}
-      </div>
+          ).length == 0 && (
+            <div
+              className={`w-full flex flex-col justify-center items-center ${
+                searchQuery.trim().length == 0 ? 'h-[75vh]' : 'h-[65vh]'
+              }`}
+            >
+              <img src={SnorlaxLogo} alt='' className='w-24' />
+              <h2 className='text-xl font-medium text-app-text'>
+                No server{' '}
+                {searchQuery.trim().length == 0
+                  ? 'added'
+                  : 'matching search result'}{' '}
+                !
+              </h2>
+              <div className='mt-2 w-full px-60 flex justify-center'>
+                <p className='text-app-text opacity-60 text-center'>
+                  You can't use this application unless you connect to a snorlax
+                  server.
+                </p>
+              </div>
+              <ServerForm>
+                <Button
+                  mt={5}
+                  className='text-app-text bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
+                >
+                  Add server
+                </Button>
+              </ServerForm>
+            </div>
+          )}
+        {!loading &&
+          servers
+            .filter((server) =>
+              server.name
+                .trim()
+                .toLowerCase()
+                .includes(searchQuery.trim().toLowerCase())
+            )
+            .map((server) => <ServerDisplay server={server} key={server.id} />)}
+      </motion.div>
     </div>
   );
 };
