@@ -5,6 +5,10 @@ import { FileIcon } from 'react-file-icon';
 import { useFileListStore } from '@/store/filelist.store';
 import { useFilesStore } from '@/store/files.store';
 import { getFileIcon } from '@/utils/icon';
+import { RenameWrapper } from './renameWrapper';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { HiOutlineEye } from 'react-icons/hi2';
+import { DeleteWrapper } from './deleteWrapper';
 import {
   Button,
   Modal,
@@ -17,10 +21,6 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
-import { RenameWrapper } from './renameWrapper';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import { HiOutlineEye } from 'react-icons/hi2';
-import { DeleteWrapper } from './deleteWrapper';
 
 interface Props {
   file: FileType;
