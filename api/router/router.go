@@ -207,8 +207,11 @@ func deleteFileRoute(context *gin.Context) {
 }
 
 func fileUploadRoute(context *gin.Context) {
-	var requestBody FileUploadRequestBody
-	if GetBodyFromRequest(context, &requestBody) != nil {
+	fileName := context.PostForm("fileName")
+	filePath := context.PostForm("filePath")
+
+	if len(fileName) == 0 || len(filePath) == 0 {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "fileName or filePath is not provided"})
 		return
 	}
 
@@ -219,12 +222,12 @@ func fileUploadRoute(context *gin.Context) {
 		return
 	}
 
-	err = context.SaveUploadedFile(uploadedFile, file.StorageFolder+requestBody.FilePath+requestBody.FileName)
+	err = context.SaveUploadedFile(uploadedFile, file.StorageFolder+filePath+"/"+fileName)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"message": "uploaded file successfully"})
+	context.JSON(http.StatusOK, gin.H{"message": "Uploaded file successfully."})
 }
