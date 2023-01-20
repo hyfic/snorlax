@@ -3,6 +3,7 @@ import { ServerType } from '@/types/server.type';
 import { invoke } from '@tauri-apps/api';
 
 interface ServerStore {
+  loading: boolean;
   servers: ServerType[];
   selectedServer: ServerType | null;
   setSelectedServer: (selectedServer: ServerType | null) => void;
@@ -12,13 +13,15 @@ interface ServerStore {
 }
 
 export const useServerStore = create<ServerStore>((set) => ({
+  loading: false,
   servers: [],
   selectedServer: null,
   setSelectedServer: (selectedServer) => set({ selectedServer }),
   loadServers(selectServerWithId) {
+    set({ servers: [], loading: true });
     invoke('read_servers')
       .then((servers: any) => {
-        set({ servers });
+        set({ servers, loading: false });
 
         // select server if id is given
         if (selectServerWithId) {
