@@ -85,20 +85,22 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
           <ModalHeader>Upload file</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input
-              variant='filled'
-              placeholder='File name'
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
-              disabled={loading}
-            />
+            {file && (
+              <Input
+                variant='filled'
+                placeholder='File name'
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+                disabled={loading}
+              />
+            )}
             {isThereDuplicate && (
-              <p className='mt-2 text-rose-300'>
+              <p className='my-2 text-rose-300'>
                 File already exists, change filename
               </p>
             )}
             <Button
-              mt={2}
+              mt={file ? 2 : 0}
               w='full'
               className='bg-app-dark4 transition-all duration-200 hover:bg-app-dark4/60'
               onClick={() => imageInputRef.current.click()}

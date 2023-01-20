@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactComponent } from '@/types/react.type';
 import { createFolder } from '@/api/file.api';
 import { showToast } from '@/utils/showToast';
@@ -28,12 +28,13 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
 }) => {
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
 
-  const { addFile } = useFilesStore();
+  const { addFile, files } = useFilesStore();
   const { selectedServer } = useServerStore();
-  const { path } = useFileListStore();
+  const { path, setPath } = useFileListStore();
 
   const [folderName, setFolderName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isThereDuplicate, setIsThereDuplicate] = useState(false);
 
   const onClose = () => {
     setFolderName('');
@@ -55,6 +56,7 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
           name: folderName,
           isDir: true,
         });
+        setPath(path + `${path === '/' ? '' : '/'}` + folderName);
         onClose();
 
         if (afterCreate) {
@@ -72,6 +74,11 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
       })
       .finally(() => setLoading(false));
   };
+
+  useEffect(() => {
+    let duplicate = files.filter((f) => f.name === folderName);
+    setIsThereDuplicate(duplicate.length !== 0);
+  }, [folderName]);
 
   return (
     <>
@@ -93,6 +100,11 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
               value={folderName}
               onChange={(e) => setFolderName(e.target.value)}
             />
+            {isThereDuplicate && (
+              <p className='my-2 text-rose-300'>
+                File already exists, change foldername
+              </p>
+            )}
           </ModalBody>
           <ModalFooter>
             <Button
@@ -104,7 +116,9 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
               Cancel
             </Button>
             <Button
-              disabled={loading || folderName.trim().length === 0}
+              disabled={
+                loading || folderName.trim().length === 0 || isThereDuplicate
+              }
               isLoading={loading}
               onClick={createFolderHandler}
               className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
