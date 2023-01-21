@@ -10,7 +10,7 @@ A local cloud storage system.
 
 Snorlax is an open source cloud storage software, where users can run [Server](./api/), and connect to multiple server and manage files in server using [Client](./app/).
 
-<img src="https://i.ibb.co/BLxWQp8/screenshot.png" width="100%" />
+<img src="https://i.ibb.co/Kz0rDDr/image-6.png" width="100%" />
 
 ## SETUP ⚒️
 
