@@ -15,6 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Progress,
   useDisclosure,
 } from '@chakra-ui/react';
 
@@ -31,9 +32,13 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isThereDuplicate, setIsThereDuplicate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const onClose = () => {
     setFile(null);
+    setFileName('');
+    setIsThereDuplicate(false);
+    setProgress(0);
     closeModal();
   };
 
@@ -42,7 +47,20 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
 
     if (!selectedServer || !file) return;
 
-    uploadFile(selectedServer.connection, path, file, fileName)
+    uploadFile(
+      selectedServer.connection,
+      path,
+      file,
+      fileName,
+      (progressEvent) => {
+        const { loaded, total } = progressEvent;
+        if (!total) return;
+        let percent = Math.floor((loaded * 100) / total);
+        if (percent < 100) {
+          setProgress(percent);
+        }
+      }
+    )
       .then(() => {
         showToast({
           title: 'Uploaded file successfully',
@@ -124,6 +142,15 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
                 setFileName(file.name);
               }}
             />
+            {progress !== 0 && (
+              <Progress
+                value={progress}
+                size='xs'
+                mt={5}
+                className='rounded-full'
+                color='#5993E2'
+              />
+            )}
           </ModalBody>
           <ModalFooter>
             <Button

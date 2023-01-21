@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosProgressEvent } from 'axios';
 
 export const getDirectory = (connection: string, path: string) => {
   return axios.get(`${connection}/file/view-folder?path=${path}`);
@@ -48,7 +48,8 @@ export const uploadFile = (
   connection: string,
   path: string,
   file: File,
-  fileName: string
+  fileName: string,
+  onUploadProgress: (progressEvent: AxiosProgressEvent) => void
 ) => {
   const formData = new FormData();
 
@@ -60,5 +61,6 @@ export const uploadFile = (
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+    onUploadProgress,
   });
 };
