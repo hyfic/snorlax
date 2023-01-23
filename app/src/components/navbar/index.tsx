@@ -18,12 +18,6 @@ export const Navbar: React.FC = () => {
           </div>
           Overview
         </Navigation>
-        <Navigation page={Paths.favorites}>
-          <div className='w-5 mr-2'>
-            <AiOutlineHeart className='text-xl text-app-text' />
-          </div>
-          Favorites
-        </Navigation>
         <Navigation page={Paths.settings}>
           <div className='w-5 mr-2'>
             <IoSettingsOutline className='text-lg text-app-text' />

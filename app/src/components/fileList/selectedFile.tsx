@@ -4,7 +4,7 @@ import moment from 'moment';
 import { useFilesStore } from '@/store/files.store';
 import { FileIcon } from 'react-file-icon';
 import { getFileIcon } from '@/utils/icon';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { HiOutlineEye } from 'react-icons/hi2';
 import { IoMdClose } from 'react-icons/io';
 import { FiDownload, FiEdit, FiTrash2 } from 'react-icons/fi';
@@ -14,6 +14,7 @@ import { FileInfoType } from '@/types/file.type';
 import { getFileInfo } from '@/api/file.api';
 import { DeleteWrapper } from './deleteWrapper';
 import { RenameWrapper } from './renameWrapper';
+import { FileInfoWrapper } from './fileInfoWrapper';
 import { isImage } from '@/utils/extension';
 import {
   Button,
@@ -78,17 +79,25 @@ export const SelectedFile: React.FC = () => {
         <div className='mt-2 w-60 bg-app-dark3 border border-app-dark4 p-3 rounded-lg'>
           <p className='font-medium text-app-text'>{selectedFile.name}</p>
           <Flex mt={3} alignItems='center'>
-            <Tooltip
-              label='Add to favorites'
-              className='bg-app-dark3 border border-app-dark4 text-app-text'
+            <FileInfoWrapper
+              path={path}
+              file={selectedFile}
+              fileInfo={fileInfo}
             >
-              <IconButton
-                aria-label='Favorite'
-                variant='ghost'
-                className='hover:bg-app-dark4'
-                icon={<AiOutlineHeart className='text-xl text-app-text' />}
-              />
-            </Tooltip>
+              <Tooltip
+                label='Get file info'
+                className='bg-app-dark3 border border-app-dark4 text-app-text'
+              >
+                <IconButton
+                  aria-label='File info'
+                  variant='ghost'
+                  className='hover:bg-app-dark4'
+                  icon={
+                    <AiOutlineInfoCircle className='text-lg text-app-text' />
+                  }
+                />
+              </Tooltip>
+            </FileInfoWrapper>
             <Tooltip
               label='Preview / Download'
               className='bg-app-dark3 border border-app-dark4 text-app-text'
