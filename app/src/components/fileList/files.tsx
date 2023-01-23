@@ -72,8 +72,6 @@ const item = {
 };
 
 export const FileList: React.FC<FileListProps> = ({ loading, files }) => {
-  const { selectedFile } = useFilesStore();
-
   return (
     <>
       {!loading && files.length == 0 && (
@@ -100,9 +98,7 @@ export const FileList: React.FC<FileListProps> = ({ loading, files }) => {
       )}
       <motion.div
         variants={container}
-        className={`w-full grid gap-5 ${
-          selectedFile ? 'grid-cols-5' : 'grid-cols-6'
-        }`}
+        className='w-full grid gap-5 grid-cols-3 md:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8'
         initial='hidden'
         animate='visible'
       >

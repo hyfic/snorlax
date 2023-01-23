@@ -108,6 +108,7 @@ export const RenameWrapper: ReactComponent<Props> = ({
               placeholder='File name'
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
+              autoFocus
             />
             {isThereDuplicate && (
               <p className='mt-2 text-rose-300'>

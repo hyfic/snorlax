@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 import { useFileListStore } from '@/store/filelist.store';
 import { FiFolderPlus, FiSearch, FiUpload } from 'react-icons/fi';
@@ -27,6 +27,16 @@ export const Header: React.FC = () => {
   const { loadFiles, setSelectedFile } = useFilesStore();
   const { path, setPath, pathName, searchQuery, setSearchQuery } =
     useFileListStore();
+
+  const inputRef = React.useRef<any>();
+
+  useEffect(() => {
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'k') {
+        inputRef.current.focus();
+      }
+    });
+  }, []);
 
   return (
     <div id='top'>
@@ -87,6 +97,7 @@ export const Header: React.FC = () => {
             variant='filled'
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            ref={inputRef}
           />
         </InputGroup>
         <Flex alignItems='center'>

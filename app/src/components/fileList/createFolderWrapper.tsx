@@ -99,6 +99,7 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
               placeholder='Folder name'
               value={folderName}
               onChange={(e) => setFolderName(e.target.value)}
+              autoFocus
             />
             {isThereDuplicate && (
               <p className='my-2 text-rose-300'>
