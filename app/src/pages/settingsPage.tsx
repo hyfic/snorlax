@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SnorlaxLogo from '@/assets/logo.svg';
 import { motion } from 'framer-motion';
 import { FiSearch } from 'react-icons/fi';
@@ -34,6 +34,16 @@ export const SettingsPage: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const inputRef = React.useRef<any>();
+
+  useEffect(() => {
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'k') {
+        inputRef.current.focus();
+      }
+    });
+  }, []);
+
   return (
     <div>
       <Flex alignItems='center' justifyContent='space-between'>
@@ -58,6 +68,7 @@ export const SettingsPage: React.FC = () => {
               variant='filled'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              ref={inputRef}
             />
           </InputGroup>
           <ServerForm>
