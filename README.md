@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/logo.png" width="20%" alt="snorlax" />
+  <img src="https://i.ibb.co/RvJhHq4/logo.png" width="20%" alt="snorlax" />
 </p>
 
 # SNORLAX
@@ -8,7 +8,9 @@ A local cloud storage system.
 
 ## ABOUT 📖
 
-Snorlax is an open source cloud storage software, where users can run [Server](./api/README.md), and connect to multiple server and manage files in server using [Client](./app/README.md).
+Snorlax is an open source cloud storage software, where users can run [Server](./api/), and connect to multiple server and manage files in server using [Client](./app/).
+
+<img src="https://i.ibb.co/Kz0rDDr/image-6.png" width="100%" />
 
 ## SETUP ⚒️
 
