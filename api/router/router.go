@@ -16,49 +16,30 @@ func init() {
 
 func StartServer(port int32) {
 	router.Use(cors.Default())
-	router.Use(authorizationMiddleware()) // use authorization middleware
 
 	router.GET("/ping", pingRoute) // route to check if server is up
 
 	// Routes
 	fileApi := router.Group("file")
 
-	fileApi.POST("/create-folder", createFolderRoute)
 	fileApi.GET("/view-folder", viewFolderRoute)
-
 	fileApi.GET("/get-file-info", getFileInfoRoute)
 	fileApi.GET("/download", downloadRoute)
 
-	fileApi.PUT("/rename-file", renameFileRoute)
-	fileApi.DELETE("/delete-file", deleteFileRoute)
+	fileApi.POST("/create-folder", createFolderRoute)
 	fileApi.POST("/upload", fileUploadRoute)
 
-	fileApi.Use()
+	fileApi.PUT("/rename-file", renameFileRoute)
+	fileApi.DELETE("/delete-file", deleteFileRoute)
 
 	// set storage as static folder
-	router.Static("/storage", "./storage")
+	fileApi.Static("/storage", "./storage")
+
+	fileApi.Use()
 
 	// listen server on port
 	addr := fmt.Sprintf(":%v", port)
 	router.Run(addr)
-}
-
-// Authorization middleware checker
-// :- verify authorization token & proceed to route
-func authorizationMiddleware() gin.HandlerFunc {
-	return func(context *gin.Context) {
-		//authorizationHeader := context.Request.Header.Get("authorization")
-		//
-		//if len(authorizationHeader) == 0 {
-		//	context.JSON(http.StatusUnauthorized, gin.H{"message": "authorization header is not provided."})
-		//	context.Abort()
-		//	return
-		//}
-
-		// TODO: check for authorization
-
-		context.Next()
-	}
 }
 
 // Routes handlers
