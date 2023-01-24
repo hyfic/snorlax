@@ -1,6 +1,8 @@
 package util
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func GetPort() int32 {
 	var port int32 = 8000
