@@ -54,9 +54,10 @@ export const useFilesStore = create<FilesStore>((set) => ({
       .then(({ data }) => set({ files: data || [] }))
       .catch((err) => {
         set({ files: [] });
+        console.log(err);
         showToast({
           title: 'Failed to load files',
-          description: err?.message,
+          description: err?.response?.data?.message || err?.message,
           status: 'error',
           duration: 5000,
         });

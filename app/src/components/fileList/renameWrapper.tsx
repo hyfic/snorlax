@@ -80,7 +80,7 @@ export const RenameWrapper: ReactComponent<Props> = ({
       .catch((err) => {
         showToast({
           title: `Failed to rename ${selectedFile.isDir ? 'folder' : 'file'}`,
-          description: err?.message,
+          description: err?.response?.data?.message || err?.message,
           status: 'error',
           duration: 5000,
         });

@@ -53,7 +53,7 @@ export const SelectedFile: React.FC = () => {
         {isImage(selectedFile.name) ? (
           <div className='w-60'>
             <img
-              src={`${selectedServer?.connection}/storage/${path}/${selectedFile.name}`}
+              src={`${selectedServer?.connection}/file/storage/${path}/${selectedFile.name}`}
               alt={selectedFile.name}
               className='w-full h-full rounded-lg'
             />
@@ -190,7 +190,7 @@ export const SelectedFile: React.FC = () => {
               Close preview
             </Button>
             <iframe
-              src={`${selectedServer?.connection}/storage/${path}/${selectedFile.name}`}
+              src={`${selectedServer?.connection}/file/storage/${path}/${selectedFile.name}`}
               className='w-full h-full bg-app-dark2'
               allowFullScreen={true}
             >
