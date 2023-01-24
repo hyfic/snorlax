@@ -75,7 +75,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
       .catch((err) => {
         showToast({
           title: 'Failed to upload file',
-          description: err?.message,
+          description: err?.response?.data?.message || err?.message,
           status: 'error',
           duration: 5000,
         });

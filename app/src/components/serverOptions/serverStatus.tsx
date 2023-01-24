@@ -25,7 +25,10 @@ export const ServerStatus: React.FC<Props> = ({
     setLoading(true);
     pingServer(connection)
       .then(() => setIsServerOnline(true))
-      .catch(() => setIsServerOnline(false))
+      .catch((err) => {
+        console.log(err?.message);
+        setIsServerOnline(false);
+      })
       .finally(() => setLoading(false));
   };
 

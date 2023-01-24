@@ -66,7 +66,7 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
       .catch((err) => {
         showToast({
           title: 'Failed to create folder',
-          description: err?.message,
+          description: err?.response?.data?.message || err?.message,
           status: 'error',
           duration: 5000,
         });

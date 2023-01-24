@@ -39,7 +39,7 @@ export const DeleteWrapper: ReactComponent<Props> = ({
       .catch((err) => {
         showToast({
           title: 'Failed to delete file',
-          description: err?.message,
+          description: err?.response?.data?.message || err?.message,
           duration: 5000,
           status: 'error',
         });
