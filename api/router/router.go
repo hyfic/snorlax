@@ -5,13 +5,15 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hyfic/snorlax/api/file"
+	"github.com/hyfic/snorlax/api/util"
 	"net/http"
 )
 
 var router *gin.Engine
 
 func init() {
-	router = gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	router = gin.New()
 }
 
 func StartServer(port int32) {
@@ -39,6 +41,18 @@ func StartServer(port int32) {
 
 	// listen server on port
 	addr := fmt.Sprintf(":%v", port)
+
+	fmt.Println("=======================")
+	fmt.Println("[+] SERVER STARTED AT PORT", port)
+	fmt.Println("[i] http://127.0.0.1" + addr)
+
+	ip, err := util.LocalIP()
+
+	if err == nil {
+		fmt.Println("[i] http://" + ip.String() + addr)
+	}
+	fmt.Println("=======================")
+
 	router.Run(addr)
 }
 
