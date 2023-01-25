@@ -46,10 +46,12 @@ func StartServer(port int32) {
 	fmt.Println("[+] SERVER STARTED AT PORT", port)
 	fmt.Println("[i] http://127.0.0.1" + addr)
 
-	ip, err := util.LocalIP()
+	ips, err := util.LocalIP()
 
 	if err == nil {
-		fmt.Println("[i] http://" + ip.String() + addr)
+		for _, ip := range ips {
+			fmt.Println("[i] http://" + ip.String() + addr)
+		}
 	}
 	fmt.Println("=======================")
 
@@ -59,6 +61,7 @@ func StartServer(port int32) {
 // Routes handlers
 
 func pingRoute(context *gin.Context) {
+	fmt.Println("[" + context.ClientIP() + "] PING")
 	context.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
 
