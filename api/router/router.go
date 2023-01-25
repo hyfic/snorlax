@@ -5,13 +5,16 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/hyfic/snorlax/api/file"
+	"github.com/hyfic/snorlax/api/logger"
+	"github.com/hyfic/snorlax/api/util"
 	"net/http"
 )
 
 var router *gin.Engine
 
 func init() {
-	router = gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	router = gin.New()
 }
 
 func StartServer(port int32) {
@@ -39,6 +42,20 @@ func StartServer(port int32) {
 
 	// listen server on port
 	addr := fmt.Sprintf(":%v", port)
+
+	fmt.Println("=======================")
+	logger.Success(fmt.Sprintf("[+] SERVER STARTED AT PORT %v", port))
+	logger.Info(fmt.Sprintf("[i] http://127.0.0.1" + addr))
+
+	ips, err := util.LocalIP()
+
+	if err == nil {
+		for _, ip := range ips {
+			logger.Info(fmt.Sprintf("[i] http://" + ip.String() + addr))
+		}
+	}
+	fmt.Println("=======================")
+
 	router.Run(addr)
 }
 
@@ -46,6 +63,7 @@ func StartServer(port int32) {
 
 func pingRoute(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"message": "ok"})
+	logger.RouteLog(context.ClientIP(), "GET", "PING", false)
 }
 
 func createFolderRoute(context *gin.Context) {
@@ -57,10 +75,12 @@ func createFolderRoute(context *gin.Context) {
 	err := file.CreateFolder(requestBody.Path)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		logger.RouteLog(context.ClientIP(), "POST", err.Error(), true)
 		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{"message": requestBody.Path + " created"})
+	logger.RouteLog(context.ClientIP(), "POST", "CREATED FOLDER "+requestBody.Path, false)
 }
 
 func viewFolderRoute(context *gin.Context) {
@@ -73,10 +93,12 @@ func viewFolderRoute(context *gin.Context) {
 	files, err := file.ReadFolder(path)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		logger.RouteLog(context.ClientIP(), "GET", err.Error(), true)
 		return
 	}
 
 	context.JSON(http.StatusOK, files)
+	logger.RouteLog(context.ClientIP(), "GET", "VIEW FOLDER "+path, false)
 }
 
 func getFileInfoRoute(context *gin.Context) {
@@ -89,10 +111,13 @@ func getFileInfoRoute(context *gin.Context) {
 	file, err := file.GetFileInfo(path)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		logger.RouteLog(context.ClientIP(), "GET", err.Error(), true)
 		return
 	}
 
 	context.JSON(http.StatusOK, file)
+	logger.RouteLog(context.ClientIP(), "GET", "GET FILE INFO "+path, false)
+
 }
 
 func downloadRoute(context *gin.Context) {
@@ -102,10 +127,12 @@ func downloadRoute(context *gin.Context) {
 	if len(path) == 0 || len(fileName) == 0 {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "path/name is not given."})
 		context.Abort()
+		logger.RouteLog(context.ClientIP(), "GET", "path/name IS NOT GIVEN IN REQUEST QUERY", true)
 		return
 	}
 
 	context.FileAttachment(file.StorageFolder+path, fileName)
+	logger.RouteLog(context.ClientIP(), "GET", "DOWNLOAD "+path, false)
 }
 
 func renameFileRoute(context *gin.Context) {
@@ -118,10 +145,12 @@ func renameFileRoute(context *gin.Context) {
 	err := file.RenameFile(requestBody.OldPath, requestBody.NewPath)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		logger.RouteLog(context.ClientIP(), "PUT", err.Error(), true)
 		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{"message": "Renamed " + requestBody.OldPath + " to " + requestBody.NewPath})
+	logger.RouteLog(context.ClientIP(), "PUT", "RENAMED "+requestBody.OldPath+" TO "+requestBody.NewPath, false)
 }
 
 func deleteFileRoute(context *gin.Context) {
@@ -134,10 +163,12 @@ func deleteFileRoute(context *gin.Context) {
 	err := file.DeleteFile(path)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		logger.RouteLog(context.ClientIP(), "DELETE", err.Error(), true)
 		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{"message": "deleted " + path + " successfully"})
+	logger.RouteLog(context.ClientIP(), "DELETE", "DELETED "+path, false)
 }
 
 func fileUploadRoute(context *gin.Context) {
@@ -146,6 +177,7 @@ func fileUploadRoute(context *gin.Context) {
 
 	if len(fileName) == 0 || len(filePath) == 0 {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "fileName or filePath is not provided"})
+		logger.RouteLog(context.ClientIP(), "POST", "fileName OR filePath IS NOT GIVEN IN REQUEST QUERY", true)
 		return
 	}
 
@@ -153,6 +185,7 @@ func fileUploadRoute(context *gin.Context) {
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		logger.RouteLog(context.ClientIP(), "POST", err.Error(), true)
 		return
 	}
 
@@ -160,8 +193,10 @@ func fileUploadRoute(context *gin.Context) {
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		logger.RouteLog(context.ClientIP(), "POST", err.Error(), true)
 		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{"message": "Uploaded file successfully."})
+	logger.RouteLog(context.ClientIP(), "POST", "UPLOADED "+fileName+" TO "+filePath, false)
 }
