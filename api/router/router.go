@@ -131,7 +131,7 @@ func downloadRoute(context *gin.Context) {
 		return
 	}
 
-	context.FileAttachment(file.StorageFolder+path, fileName)
+	context.FileAttachment(util.StorageFolder+path, fileName)
 	logger.RouteLog(context.ClientIP(), "GET", "DOWNLOAD "+path, false)
 }
 
@@ -189,7 +189,7 @@ func fileUploadRoute(context *gin.Context) {
 		return
 	}
 
-	err = context.SaveUploadedFile(uploadedFile, file.StorageFolder+filePath+"/"+fileName)
+	err = context.SaveUploadedFile(uploadedFile, util.StorageFolder+filePath+"/"+fileName)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
