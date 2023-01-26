@@ -36,7 +36,7 @@ func StartServer(port int32) {
 	fileApi.DELETE("/delete-file", deleteFileRoute)
 
 	// set storage as static folder
-	fileApi.Static("/storage", "./storage")
+	fileApi.Static("/storage", util.StorageFolder)
 
 	fileApi.Use()
 
