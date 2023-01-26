@@ -16,6 +16,10 @@ func Success(message string) {
 	fmt.Println(string(colorGreen) + message + string(colorReset))
 }
 
+func Error(message string) {
+	fmt.Println(string(colorRed) + message + string(colorReset))
+}
+
 func Info(message string) {
 	fmt.Println(string(colorBlue) + message + string(colorReset))
 }
