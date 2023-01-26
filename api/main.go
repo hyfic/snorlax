@@ -10,6 +10,9 @@ func main() {
 	fmt.Println("SNORLAX SERVER v1.0.0 🚀")
 	fmt.Println("=======================")
 
+	// get storage folder
+	util.GetStorageFolder()
+
 	// ask custom port
 	port := util.GetPort()
 	router.StartServer(port)

@@ -2,29 +2,28 @@ package file
 
 import (
 	"fmt"
+	"github.com/hyfic/snorlax/api/util"
 	"os"
 )
-
-const StorageFolder = "storage/"
 
 // Create new folder, in given folder path
 
 func CreateFolder(folderPath string) error {
-	err := os.MkdirAll(StorageFolder+folderPath, os.ModePerm)
+	err := os.MkdirAll(util.StorageFolder+folderPath, os.ModePerm)
 	return err
 }
 
 // Remove the folder in given path
 
 func DeleteFolder(folderPath string) error {
-	err := os.RemoveAll(StorageFolder + folderPath)
+	err := os.RemoveAll(util.StorageFolder + folderPath)
 	return err
 }
 
 // Rename the folder in given path
 
 func RenameFolder(folderPath string, newPath string) error {
-	err := os.Rename(StorageFolder+folderPath, StorageFolder+newPath)
+	err := os.Rename(util.StorageFolder+folderPath, util.StorageFolder+newPath)
 	return err
 }
 
@@ -36,7 +35,7 @@ type File struct {
 }
 
 func ReadFolder(folderPath string) ([]File, error) {
-	rawFiles, err := os.ReadDir(StorageFolder + folderPath)
+	rawFiles, err := os.ReadDir(util.StorageFolder + folderPath)
 
 	var files []File
 
@@ -59,7 +58,7 @@ type FileInfo struct {
 func GetFileInfo(path string) (FileInfo, error) {
 	var fileInfo FileInfo
 
-	fileStat, err := os.Stat(StorageFolder + path)
+	fileStat, err := os.Stat(util.StorageFolder + path)
 
 	if err != nil {
 		return fileInfo, err
@@ -76,13 +75,13 @@ func GetFileInfo(path string) (FileInfo, error) {
 // Rename file
 
 func RenameFile(oldPath string, newPath string) error {
-	err := os.Rename(StorageFolder+oldPath, StorageFolder+newPath)
+	err := os.Rename(util.StorageFolder+oldPath, util.StorageFolder+newPath)
 	return err
 }
 
 // Delete file
 
 func DeleteFile(path string) error {
-	err := os.RemoveAll(StorageFolder + path)
+	err := os.RemoveAll(util.StorageFolder + path)
 	return err
 }
