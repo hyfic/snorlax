@@ -5,9 +5,11 @@ import { Files } from '@/components/fileList/files';
 
 export const FileListPage: React.FC = () => {
   return (
-    <ServerCheckerWrapper>
-      <Header />
-      <Files />
-    </ServerCheckerWrapper>
+    <div className='px-5 py-3'>
+      <ServerCheckerWrapper>
+        <Header />
+        <Files />
+      </ServerCheckerWrapper>
+    </div>
   );
 };
