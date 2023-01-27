@@ -12,6 +12,7 @@ func main() {
 
 	// get storage folder
 	util.GetStorageFolder()
+	fmt.Println("=======================")
 
 	// ask custom port
 	port := util.GetPort()
