@@ -20,8 +20,6 @@
 # Go workspace file
 go.work
 
-# Go sum
-go.sum
 
 # Database file
 *.db
