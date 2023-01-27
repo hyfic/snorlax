@@ -5,7 +5,6 @@ import { Navigation } from './navigation';
 import { Paths } from '@/utils/paths';
 import { TbPlanet } from 'react-icons/tb';
 import { IoSettingsOutline } from 'react-icons/io5';
-import { AiOutlineHeart } from 'react-icons/ai';
 
 export const Navbar: React.FC = () => {
   return (
