@@ -6,7 +6,7 @@ interface FileListStore {
   view: 'grid' | 'view';
   searchQuery: string;
   setPath: (path: string) => void;
-  setView: (view: 'grid' | 'view') => void;
+  setView: (view: any) => void;
   setSearchQuery: (searchQuery: string) => void;
 }
 
