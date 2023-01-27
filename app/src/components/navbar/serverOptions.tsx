@@ -56,6 +56,7 @@ export const ServerOptions: React.FC = () => {
           as={Button}
           rightIcon={<BiChevronDown className='text-2xl' />}
           className='bg-app-dark3 border-2 border-app-dark4'
+          py={5}
         >
           {menuPlaceholder}
         </MenuButton>
