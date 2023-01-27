@@ -1,160 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import SnorlaxLogo from '@/assets/logo.svg';
-import { motion } from 'framer-motion';
-import { FiSearch } from 'react-icons/fi';
-import { IoMdRefresh } from 'react-icons/io';
-import { ServerForm } from '@/components/serverOptions/serverFormWrapper';
-import { useServerStore } from '@/store/server.store';
-import { ServerDisplay } from '@/components/serverOptions/serverDisplay';
-import {
-  Button,
-  Flex,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Spinner,
-  Tooltip,
-} from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { ServerSettings } from '@/components/settings/serverSettings';
+import { SettingItem } from '@/components/settings/settingItem';
+import { FiServer } from 'react-icons/fi';
+import { TbFiles } from 'react-icons/tb';
+import { AiOutlineBug, AiOutlineInfoCircle } from 'react-icons/ai';
+import { FileSettings } from '@/components/settings/fileSettings';
+import { IssueSettings } from '@/components/settings/issueSettings';
+import { About } from '@/components/settings/about';
 
-const container = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delayChildren: 0.005,
-      staggerChildren: 0.005,
-    },
-  },
-};
+export enum SettingsOption {
+  Server,
+  Files,
+  Issues,
+  About,
+}
 
 export const SettingsPage: React.FC = () => {
-  const { servers, loadServers, loading } = useServerStore();
-
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const inputRef = React.useRef<any>();
-
-  useEffect(() => {
-    window.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.key === 'k') {
-        inputRef.current.focus();
-      }
-    });
-  }, []);
+  const [currentSetting, setCurrentSetting] = useState(SettingsOption.Server);
 
   return (
-    <div>
-      <Flex alignItems='center' justifyContent='space-between'>
-        <div>
-          <h1 className='text-2xl font-semibold'>Settings</h1>
-          <p className='text-app-text opacity-50 mt-1'>
-            Manage your storage locations.
-          </p>
-        </div>
-        <Flex alignItems='center'>
-          <InputGroup>
-            <InputLeftElement
-              pointerEvents='none'
-              children={
-                <FiSearch className='text-app-text opacity-60 text-lg font-medium' />
-              }
-            />
-            <Input
-              placeholder='Search'
-              className='bg-app-dark3'
-              focusBorderColor='#5993E2'
-              variant='filled'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              ref={inputRef}
-            />
-          </InputGroup>
-          <ServerForm>
-            <Button
-              ml={1}
-              className='bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
-            >
-              Add server
-            </Button>
-          </ServerForm>
-          <Tooltip
-            label='Refetch servers'
-            className='bg-app-dark3 text-app-text border border-app-dark4'
-          >
-            <IconButton
-              aria-label='Refetch'
-              ml={1}
-              icon={<IoMdRefresh className='text-app-text text-xl' />}
-              className='bg-app-dark3 border border-app-dark4 hover:opacity-60'
-              onClick={() => loadServers()}
-            />
-          </Tooltip>
-        </Flex>
-      </Flex>
-      <motion.div
-        variants={container}
-        className='mt-5'
-        initial='hidden'
-        animate='visible'
-      >
-        {loading && (
-          <div className='h-[75vh] w-full flex flex-col items-center justify-center'>
-            <Spinner />
+    <div className='flex h-screen'>
+      <div className='w-60 h-screen border border-l-0 border-t-0 border-b-0 border-app-dark3 p-2'>
+        <SettingItem
+          setting={SettingsOption.Server}
+          currentSetting={currentSetting}
+          setCurrentSetting={setCurrentSetting}
+        >
+          <div className='w-5 mr-2'>
+            <FiServer className='text-app-text' />
           </div>
-        )}
-        {searchQuery.trim().length !== 0 && (
-          <h2 className='mb-5 text-xl font-medium'>
-            Searching for {searchQuery} ...
-          </h2>
-        )}
-        {!loading &&
-          servers.filter((server) =>
-            server.name
-              .trim()
-              .toLowerCase()
-              .includes(searchQuery.trim().toLowerCase())
-          ).length == 0 && (
-            <div
-              className={`w-full flex flex-col justify-center items-center ${
-                searchQuery.trim().length == 0 ? 'h-[75vh]' : 'h-[65vh]'
-              }`}
-            >
-              <img src={SnorlaxLogo} alt='' className='w-24' />
-              <h2 className='text-xl font-medium text-app-text'>
-                No server{' '}
-                {searchQuery.trim().length == 0
-                  ? 'added'
-                  : 'matching search result'}{' '}
-                !
-              </h2>
-              <div className='mt-2 w-full px-60 flex justify-center'>
-                <p className='text-app-text opacity-60 text-center'>
-                  You can't use this application unless you connect to a snorlax
-                  server.
-                </p>
-              </div>
-              <ServerForm>
-                <Button
-                  mt={5}
-                  className='text-app-text bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
-                >
-                  Add server
-                </Button>
-              </ServerForm>
-            </div>
-          )}
-        {!loading &&
-          servers
-            .filter((server) =>
-              server.name
-                .trim()
-                .toLowerCase()
-                .includes(searchQuery.trim().toLowerCase())
-            )
-            .map((server) => <ServerDisplay server={server} key={server.id} />)}
-      </motion.div>
+          Server
+        </SettingItem>
+        <SettingItem
+          setting={SettingsOption.Files}
+          currentSetting={currentSetting}
+          setCurrentSetting={setCurrentSetting}
+        >
+          <div className='w-5 mr-2'>
+            <TbFiles className='text-xl text-app-text' />
+          </div>
+          Files
+        </SettingItem>
+        <SettingItem
+          setting={SettingsOption.Issues}
+          currentSetting={currentSetting}
+          setCurrentSetting={setCurrentSetting}
+        >
+          <div className='w-5 mr-2'>
+            <AiOutlineBug className='text-lg text-app-text' />
+          </div>
+          Issues
+        </SettingItem>
+        <SettingItem
+          setting={SettingsOption.About}
+          currentSetting={currentSetting}
+          setCurrentSetting={setCurrentSetting}
+        >
+          <div className='w-5 mr-2'>
+            <AiOutlineInfoCircle className='text-lg text-app-text' />
+          </div>
+          About
+        </SettingItem>
+      </div>
+      <div className='h-screen w-full overflow-y-scroll py-3 pl-5'>
+        {currentSetting == SettingsOption.Server && <ServerSettings />}
+        {currentSetting == SettingsOption.Files && <FileSettings />}
+        {currentSetting == SettingsOption.Issues && <IssueSettings />}
+        {currentSetting == SettingsOption.About && <About />}
+      </div>
     </div>
   );
 };
