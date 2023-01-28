@@ -3,17 +3,14 @@ import { create } from 'zustand';
 interface FileListStore {
   pathName: string;
   path: string;
-  view: 'grid' | 'view';
   searchQuery: string;
   setPath: (path: string) => void;
-  setView: (view: any) => void;
   setSearchQuery: (searchQuery: string) => void;
 }
 
 export const useFileListStore = create<FileListStore>((set) => ({
   pathName: 'home',
   path: '/',
-  view: 'grid',
   searchQuery: '',
   setPath: (path) => {
     let paths = path.split('/');
@@ -23,6 +20,5 @@ export const useFileListStore = create<FileListStore>((set) => ({
       searchQuery: '', // clearing search field
     });
   },
-  setView: (view) => set({ view }),
   setSearchQuery: (searchQuery) => set({ searchQuery }),
 }));

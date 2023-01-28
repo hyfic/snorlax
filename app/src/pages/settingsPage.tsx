@@ -1,6 +1,5 @@
 import React from 'react';
 import HyficLogo from '@/assets/hyfic.svg';
-import { useFileListStore } from '@/store/filelist.store';
 import { AiFillHeart } from 'react-icons/ai';
 import { FaGithub } from 'react-icons/fa';
 import { SiBuymeacoffee } from 'react-icons/si';
@@ -18,7 +17,6 @@ import {
 } from '@chakra-ui/react';
 
 export const SettingsPage: React.FC = () => {
-  const { view, setView } = useFileListStore();
   const SettingTab: any = React.forwardRef<any>((props, ref) => {
     const tabProps = useTab({ ...props, ref });
     const isSelected = !!tabProps['aria-selected'];
@@ -47,23 +45,10 @@ export const SettingsPage: React.FC = () => {
       </div>
       <Tabs mt={5} variant='unstyled'>
         <TabList>
-          <SettingTab>File list</SettingTab>
           <SettingTab>Submit an issue</SettingTab>
           <SettingTab>Contribute</SettingTab>
         </TabList>
         <TabPanels>
-          <TabPanel p={0} py={5}>
-            <Select
-              w='fit-content'
-              variant='filled'
-              className='bg-app-dark3 font-medium'
-              value={view}
-              onChange={(e) => setView(e.target.value)}
-            >
-              <option value='grid'>Grid view</option>
-              <option value='list'>List view</option>
-            </Select>
-          </TabPanel>
           <TabPanel p={0} py={5}>
             <a href='https://github.com/hyfic/snorlax/issues' target='_blank'>
               <Tooltip
