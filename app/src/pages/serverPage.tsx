@@ -29,7 +29,7 @@ const container = {
   },
 };
 
-export const ServerSettings: React.FC = () => {
+export const ServerPage: React.FC = () => {
   const { servers, loadServers, loading } = useServerStore();
 
   const [searchQuery, setSearchQuery] = useState('');

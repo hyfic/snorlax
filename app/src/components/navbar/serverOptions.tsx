@@ -92,7 +92,7 @@ export const ServerOptions: React.FC = () => {
                 Add server
               </MenuItem>
             </ServerForm>
-            <Link to={Paths.settings} replace>
+            <Link to={Paths.server} replace>
               <MenuItem
                 className='bg-app-dark3 hover:bg-app-dark4'
                 icon={<IoSettingsOutline className='text-lg' />}
