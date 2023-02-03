@@ -11,7 +11,7 @@ export const ServerCheckerWrapper: ReactComponent = ({ children }) => {
     return <>{children}</>;
   } else {
     return (
-      <div className='w-full h-full flex flex-col justify-center items-center'>
+      <div className='w-full h-[90vh] flex flex-col justify-center items-center'>
         <img src={SnorlaxLogo} alt='' className='w-24' />
         <h2 className='text-xl font-medium text-app-text'>
           No server connected!
