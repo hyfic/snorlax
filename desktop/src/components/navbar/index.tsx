@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Flex, Link } from '@chakra-ui/react';
 import { ServerOptions } from './serverOptions';
 import { Navigation } from './navigation';
 import { Paths } from '@/utils/paths';
@@ -31,7 +31,13 @@ export const Navbar: React.FC = () => {
           Settings
         </Navigation>
       </Flex>
-      <p className='text-sm text-app-text2 opacity-50'>Snorlax v1.0.0</p>
+      <Link
+        href='https://hyfic.github.io/snorlax'
+        target='_blank'
+        className='text-sm text-app-text2 opacity-50'
+      >
+        Snorlax v1.0.0
+      </Link>
     </Flex>
   );
 };
