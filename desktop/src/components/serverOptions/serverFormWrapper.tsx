@@ -1,3 +1,4 @@
+import validURl from 'valid-url';
 import { useEffect, useState } from 'react';
 import { ReactComponent } from '@/types/react.type';
 import { ServerType } from '@/types/server.type';
@@ -99,6 +100,16 @@ export const ServerForm: ReactComponent<Props> = ({ server, children }) => {
   };
 
   const addServerHandler = () => {
+    // check if connection is a valid URL or not
+    if (!validURl.isUri(connection)) {
+      showToast({
+        title: 'Invalid data',
+        description: 'Please enter a valid data',
+        status: 'error',
+      });
+      return;
+    }
+
     setLoading(true);
 
     let data = server
