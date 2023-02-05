@@ -41,12 +41,6 @@ export const ServerOptions: React.FC = () => {
     setMenuPlaceholder(selectedServer.name);
   }, [selectedServer, servers]);
 
-  useEffect(() => {
-    // set selected database id to localstorage
-    if (!selectedServer) return;
-    localStorage.setItem('selectedServerId', JSON.stringify(selectedServer.id));
-  }, [selectedServer]);
-
   return (
     <div>
       <Menu>
