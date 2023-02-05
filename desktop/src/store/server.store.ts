@@ -16,12 +16,29 @@ export const useServerStore = create<ServerStore>((set) => ({
   loading: false,
   servers: [],
   selectedServer: null,
-  setSelectedServer: (selectedServer) => set({ selectedServer }),
+  setSelectedServer: (selectedServer) => {
+    // set selected database id to localstorage
+    if (selectedServer) {
+      localStorage.setItem(
+        'selectedServerId',
+        JSON.stringify(selectedServer.id)
+      );
+    }
+
+    set({ selectedServer });
+  },
   loadServers(selectServerWithId) {
     set({ servers: [], loading: true });
     invoke('read_servers')
       .then((servers: any) => {
         set({ servers, loading: false });
+
+        // get serverId from localstorage is `selectedServerId` is not given
+        if (!selectServerWithId) {
+          selectServerWithId = JSON.parse(
+            localStorage.getItem('selectedServerId') || ''
+          );
+        }
 
         // select server if id is given
         if (selectServerWithId) {

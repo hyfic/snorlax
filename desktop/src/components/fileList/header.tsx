@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import { FiFolderPlus, FiSearch, FiUpload } from 'react-icons/fi';
 import { useServerStore } from '@/store/server.store';
 import { BiChevronDown } from 'react-icons/bi';
@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
   const { selectedServer } = useServerStore();
   const { loadFiles, setSelectedFile } = useFilesStore();
   const { path, setPath, pathName, searchQuery, setSearchQuery } =
-    useFileListStore();
+    useFilePageStore();
 
   const inputRef = React.useRef<any>();
 
