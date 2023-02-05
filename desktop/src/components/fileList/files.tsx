@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import EmptyFolder from '@/assets/empty_folder.svg';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import { useServerStore } from '@/store/server.store';
 import { useFilesStore } from '@/store/files.store';
 import { FileType } from '@/types/file.type';
@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 import { UploadFileWrapper } from './uploadFileWrapper';
 
 export const Files: React.FC = () => {
-  const { path, searchQuery } = useFileListStore();
+  const { path, searchQuery } = useFilePageStore();
   const { files, loadFiles, loading } = useFilesStore();
   const { selectedServer } = useServerStore();
 

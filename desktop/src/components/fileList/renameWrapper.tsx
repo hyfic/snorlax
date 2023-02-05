@@ -5,7 +5,7 @@ import { renameFile } from '@/api/file.api';
 import { showToast } from '@/utils/showToast';
 import { useFilesStore } from '@/store/files.store';
 import { useServerStore } from '@/store/server.store';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import {
   Button,
   Input,
@@ -33,7 +33,7 @@ export const RenameWrapper: ReactComponent<Props> = ({
 
   const { renameFile: renameStoreFile, files } = useFilesStore();
   const { selectedServer } = useServerStore();
-  const { path } = useFileListStore();
+  const { path } = useFilePageStore();
 
   const [fileName, setFileName] = useState(selectedFile.name);
   const [isThereDuplicate, setIsThereDuplicate] = useState(false);

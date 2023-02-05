@@ -8,7 +8,7 @@ import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { HiOutlineEye } from 'react-icons/hi2';
 import { IoMdClose } from 'react-icons/io';
 import { FiDownload, FiEdit, FiTrash2 } from 'react-icons/fi';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import { useServerStore } from '@/store/server.store';
 import { FileInfoType } from '@/types/file.type';
 import { getFileInfo } from '@/api/file.api';
@@ -29,7 +29,7 @@ import {
 } from '@chakra-ui/react';
 
 export const SelectedFile: React.FC = () => {
-  const { path } = useFileListStore();
+  const { path } = useFilePageStore();
   const { selectedServer } = useServerStore();
   const { selectedFile, setSelectedFile } = useFilesStore();
 

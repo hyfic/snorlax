@@ -2,7 +2,7 @@ import React from 'react';
 import FolderIcon from '@/assets/folder.svg';
 import { FileType } from '@/types/file.type';
 import { FileIcon } from 'react-file-icon';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import { useFilesStore } from '@/store/files.store';
 import { getFileIcon } from '@/utils/icon';
 import { RenameWrapper } from './renameWrapper';
@@ -27,7 +27,7 @@ interface Props {
 }
 
 export const File: React.FC<Props> = ({ file }) => {
-  const { path, setPath } = useFileListStore();
+  const { path, setPath } = useFilePageStore();
   const { setSelectedFile, selectedFile } = useFilesStore();
 
   const { isOpen, onOpen, onClose } = useDisclosure();

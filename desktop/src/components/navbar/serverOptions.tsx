@@ -6,7 +6,7 @@ import { RiAddCircleLine } from 'react-icons/ri';
 import { Paths } from '@/utils/paths';
 import { ServerForm } from '../serverOptions/serverFormWrapper';
 import { useServerStore } from '@/store/server.store';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import {
   Button,
   Menu,
@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 
 export const ServerOptions: React.FC = () => {
-  const { setPath } = useFileListStore();
+  const { setPath } = useFilePageStore();
   const { selectedServer, servers, loadServers, setSelectedServer } =
     useServerStore();
 

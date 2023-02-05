@@ -3,7 +3,7 @@ import { ReactComponent } from '@/types/react.type';
 import { showToast } from '@/utils/showToast';
 import { useFilesStore } from '@/store/files.store';
 import { useServerStore } from '@/store/server.store';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import { uploadFile } from '@/api/file.api';
 import {
   Button,
@@ -24,7 +24,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
 
   const { addFile, files } = useFilesStore();
   const { selectedServer } = useServerStore();
-  const { path } = useFileListStore();
+  const { path } = useFilePageStore();
 
   const imageInputRef = React.useRef<any>();
 

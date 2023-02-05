@@ -1,7 +1,7 @@
 import { FileType } from '@/types/file.type';
 import { ReactComponent } from '@/types/react.type';
 import { useServerStore } from '@/store/server.store';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import { deleteFile } from '@/api/file.api';
 import { useFilesStore } from '@/store/files.store';
 import { showToast } from '@/utils/showToast';
@@ -18,7 +18,7 @@ export const DeleteWrapper: ReactComponent<Props> = ({
   afterDelete,
 }) => {
   const { selectedServer } = useServerStore();
-  const { path } = useFileListStore();
+  const { path } = useFilePageStore();
   const { deleteFile: deleteFileFromStore } = useFilesStore();
 
   const deleteFileHandler = () => {

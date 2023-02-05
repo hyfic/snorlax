@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface FileListStore {
+interface FilePageStore {
   pathName: string;
   path: string;
   searchQuery: string;
@@ -8,7 +8,7 @@ interface FileListStore {
   setSearchQuery: (searchQuery: string) => void;
 }
 
-export const useFileListStore = create<FileListStore>((set) => ({
+export const useFilePageStore = create<FilePageStore>((set) => ({
   pathName: 'home',
   path: '/',
   searchQuery: '',

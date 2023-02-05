@@ -4,7 +4,7 @@ import { createFolder } from '@/api/file.api';
 import { showToast } from '@/utils/showToast';
 import { useFilesStore } from '@/store/files.store';
 import { useServerStore } from '@/store/server.store';
-import { useFileListStore } from '@/store/filelist.store';
+import { useFilePageStore } from '@/store/filepage.store';
 import {
   Button,
   Input,
@@ -30,7 +30,7 @@ export const CreateFolderWrapper: ReactComponent<Props> = ({
 
   const { addFile, files } = useFilesStore();
   const { selectedServer } = useServerStore();
-  const { path, setPath } = useFileListStore();
+  const { path, setPath } = useFilePageStore();
 
   const [folderName, setFolderName] = useState('');
   const [loading, setLoading] = useState(false);
