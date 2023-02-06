@@ -36,22 +36,31 @@ export const ServerStatus: React.FC<Props> = ({
 
   return (
     <div className='flex items-center'>
-      <div
-        className={`bg-app-dark3 border border-app-dark4 py-2 px-3 rounded-md flex items-center ${className}`}
+      <Tooltip
+        label={
+          loading
+            ? 'Loading server status'
+            : `Server is ${isServerOnline ? 'online' : 'offline'}`
+        }
+        className='bg-app-dark3 text-app-text border border-app-dark4'
       >
         <div
-          className={`p-1 border-2 rounded-full mr-1.5 ${
-            loading
-              ? 'border-app-text2 bg-app-text2'
-              : isServerOnline
-              ? 'border-teal-300 bg-teal-300'
-              : 'border-rose-400 bg-rose-400'
-          }`}
-        />
-        <p className='text-app-text2'>
-          {loading ? 'Loading' : isServerOnline ? 'Online' : 'Offline'}
-        </p>
-      </div>
+          className={`bg-app-dark3 border border-app-dark4 py-2 px-3 rounded-md flex items-center cursor-pointer ${className}`}
+        >
+          <div
+            className={`p-1 border-2 rounded-full mr-1.5 ${
+              loading
+                ? 'border-app-text2 bg-app-text2'
+                : isServerOnline
+                ? 'border-teal-300 bg-teal-300'
+                : 'border-rose-400 bg-rose-400'
+            }`}
+          />
+          <p className='text-app-text2'>
+            {loading ? 'Loading' : isServerOnline ? 'Online' : 'Offline'}
+          </p>
+        </div>
+      </Tooltip>
       {refetchBtnToolTip && onRefetchBtnClick && (
         <Tooltip
           label={refetchBtnToolTip}
