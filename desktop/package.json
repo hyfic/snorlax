@@ -3,6 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": {
+    "name": "fadhilsaheer",
+    "url": "https://github.com/fadhilsaheer"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
