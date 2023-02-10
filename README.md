@@ -26,7 +26,6 @@ Snorlax is an open source cloud storage software, where users can run [Server](.
 - [x] Delete file/folder
 - [x] Display folder contents
 - [x] Download file
-- [ ] Server authorization (password protected server)
-- [ ] Add file to favorites
-- [ ] Cut/Copy file/folder
+- [ ] Control servers using app
 - [ ] Mobile app
+
