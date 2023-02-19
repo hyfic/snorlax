@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PropsWithChildren } from 'react';
 import {
   ChakraProvider,
@@ -6,6 +6,7 @@ import {
   ThemeConfig,
   createStandaloneToast,
   DarkMode,
+  useColorMode,
 } from '@chakra-ui/react';
 
 type ReactComponent<Props = {}> = React.FC<PropsWithChildren<Props>>;
@@ -21,10 +22,20 @@ const { ToastContainer } = createStandaloneToast();
 export const ChakraWrap: ReactComponent = ({ children }) => {
   return (
     <ChakraProvider theme={theme}>
-      <DarkMode>
+      <ChakraDarkMode>
         {children}
         <ToastContainer />
-      </DarkMode>
+      </ChakraDarkMode>
     </ChakraProvider>
   );
+};
+
+const ChakraDarkMode: ReactComponent = ({ children }) => {
+  const { setColorMode } = useColorMode();
+
+  useEffect(() => {
+    setColorMode('dark'); // setting color mode to dark, just in case
+  }, []);
+
+  return <DarkMode>{children}</DarkMode>;
 };
