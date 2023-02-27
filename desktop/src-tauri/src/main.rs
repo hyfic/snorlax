@@ -16,7 +16,6 @@ fn main() {
     let window_url = WindowUrl::External(url.parse().unwrap());
 
     context.config_mut().build.dist_dir = AppUrl::Url(window_url.clone());
-    context.config_mut().build.dev_path = AppUrl::Url(window_url.clone());
 
     tauri::Builder::default()
         .plugin(tauri_plugin_localhost::Builder::new(port).build())
