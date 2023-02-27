@@ -6,7 +6,7 @@
 mod controller;
 mod database;
 
-use tauri::{utils::config::AppUrl, window::WindowBuilder, WindowUrl};
+use tauri::{utils::config::AppUrl, WindowUrl};
 
 fn main() {
     let port = portpicker::pick_unused_port().expect("Failed to find unused port");
