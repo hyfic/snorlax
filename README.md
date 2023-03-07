@@ -25,7 +25,9 @@ Snorlax is an open source cloud storage software, where users can run [Server](.
 - [x] Rename file/folder
 - [x] Delete file/folder
 - [x] Display folder contents
-- [x] Download file
+- [ ] Download file to custom folder
+- [ ] Multiple file download/upload
+- [ ] Background task to monitor download/upload
 - [ ] Use RUST http client instead of axios
 
 #### POST MVP
