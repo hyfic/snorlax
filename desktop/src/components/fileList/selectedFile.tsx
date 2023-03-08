@@ -27,6 +27,7 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
+import { DownloadFileWrapper } from './downloadFileWrapper';
 
 export const SelectedFile: React.FC = () => {
   const { path } = useFilePageStore();
@@ -162,7 +163,7 @@ export const SelectedFile: React.FC = () => {
             </>
           )}
           <Divider my={3} className='border-app-text border-opacity-20' />
-          <a
+          {/* <a
             href={`${selectedServer?.connection}/file/download?path=${
               path + '/' + selectedFile.name
             }&name=${selectedFile.name}`}
@@ -174,7 +175,15 @@ export const SelectedFile: React.FC = () => {
             >
               Download
             </Button>
-          </a>
+          </a> */}
+          <DownloadFileWrapper fileName={selectedFile.name}>
+            <Button
+              leftIcon={<FiDownload />}
+              className='w-full text-app-text bg-app-accent transition-all duration-200 hover:bg-app-accent/80'
+            >
+              Download
+            </Button>
+          </DownloadFileWrapper>
         </div>
       </div>
 
