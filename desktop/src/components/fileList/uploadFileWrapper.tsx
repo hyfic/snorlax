@@ -39,6 +39,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
     setFileName('');
     setIsThereDuplicate(false);
     setProgress(0);
+    setLoading(false);
     closeModal();
   };
 
@@ -153,12 +154,7 @@ export const UploadFileWrapper: ReactComponent = ({ children }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              disabled={loading}
-              variant='outline'
-              mr={2}
-              onClick={() => onClose()}
-            >
+            <Button variant='outline' mr={2} onClick={() => onClose()}>
               Cancel
             </Button>
             <Button

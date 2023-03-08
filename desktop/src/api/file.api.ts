@@ -64,3 +64,20 @@ export const uploadFile = (
     onUploadProgress,
   });
 };
+
+export const downloadFile = (
+  connection: string,
+  path: string,
+  fileName: string,
+  onDownloadProgress: (progressEvent: AxiosProgressEvent) => void
+) => {
+  return axios.get(
+    `${connection}/file/download?path=${
+      path + '/' + fileName
+    }&name=${fileName}`,
+    {
+      responseType: 'blob',
+      onDownloadProgress,
+    }
+  );
+};
