@@ -4,6 +4,8 @@
 
 # SNORLAX
 
+> WIP
+
 A local cloud storage system.
 
 ## ABOUT 📖
