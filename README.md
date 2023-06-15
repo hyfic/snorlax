@@ -4,7 +4,7 @@
 
 # SNORLAX
 
-> WIP
+> Abandoned
 
 A local cloud storage system.
 
